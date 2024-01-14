@@ -8,6 +8,6 @@ public class Client
     public string Email { get; set; }
     public string Description { get; set; }
     public decimal Creance { get; set; }
-    
+
     public List<Achat> Achats { get; set; }
 }

@@ -9,6 +9,7 @@ public class Achat
     public decimal TotalPaye { get; set; }
     public string Description { get; set; }
 
-    public int ClientId { get; set; }
     public Client Client { get; set; }
+    
+    public List<AchatItem> AchatItems { get; set; }
 }

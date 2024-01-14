@@ -9,8 +9,6 @@ public class AchatItem
     public decimal QuantiteAvoir { get; set; }
     public decimal Remise { get; set; }
 
-    public int ProduitId { get; set; }
     public Produit Produit { get; set; }
-    public int AchatId { get; set; }
     public Achat Achat { get; set; }
 }
