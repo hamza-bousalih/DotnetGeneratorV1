@@ -1,4 +1,4 @@
-﻿using DotnetGenerator.Bean;
+﻿using DotnetGenerator.Bean.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,8 +1,14 @@
-﻿namespace DotnetGenerator.Bean;
+﻿using DotnetGenerator.Zynarator.Audit;
 
-public class AchatItem
+namespace DotnetGenerator.Bean.Core;
+
+public class AchatItem: AuditBusinessObject
 {
-    public int Id { get; set; }
+    public new int Id
+    {
+        get => base.Id;
+        set => base.Id = value;
+    }
     public decimal PrixUnitaire { get; set; }
     public decimal PrixVente { get; set; }
     public decimal Quantite { get; set; }

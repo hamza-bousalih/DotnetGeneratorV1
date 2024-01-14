@@ -1,8 +1,14 @@
-﻿namespace DotnetGenerator.Bean;
+﻿using DotnetGenerator.Zynarator.Audit;
 
-public class Client
+namespace DotnetGenerator.Bean.Core;
+
+public class Client: AuditBusinessObject
 {
-    public int Id { get; set; }
+    public new int Id
+    {
+        get => base.Id;
+        set => base.Id = value;
+    }
     public string Cin { get; set; }
     public string Nom { get; set; }
     public string Email { get; set; }

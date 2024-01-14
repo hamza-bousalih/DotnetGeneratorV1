@@ -1,8 +1,14 @@
-﻿namespace DotnetGenerator.Bean;
+﻿using DotnetGenerator.Zynarator.Audit;
 
-public class Produit
+namespace DotnetGenerator.Bean.Core;
+
+public class Produit: AuditBusinessObject
 {
-    public int Id { get; set; }
+    public new int Id
+    {
+        get => base.Id;
+        set => base.Id = value;
+    }
     public string Reference { get; set; }
     public string Libelle { get; set; }
     public string Barcode { get; set; }
