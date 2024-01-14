@@ -9,6 +9,7 @@ public class Achat: AuditBusinessObject
         get => base.Id;
         set => base.Id = value;
     }
+    
     public string Reference { get; set; }
     public DateTime DateAchat { get; set; }
     public decimal Total { get; set; }

@@ -1,15 +1,15 @@
 namespace DotnetGenerator.Zynarator.Bean;
 
-public class BusinessObject
+public abstract class BusinessObject
 {
-    protected int Id { get; set; }
-    protected string? Label { get; set; }
+    public int Id { get; set; }
+    public string? Label { get; set; }
 
-    public BusinessObject()
+    protected BusinessObject()
     {
     }
 
-    public BusinessObject(int id) => Id = id;
+    protected BusinessObject(int id) => Id = id;
 
     public override string ToString()
     {

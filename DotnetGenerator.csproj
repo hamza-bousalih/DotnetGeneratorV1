@@ -24,12 +24,20 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Dao\" />
+        <Folder Include="Bean\Core\" />
+        
         <Folder Include="Service\Facade\" />
         <Folder Include="Service\Impl\" />
+        
+        <Folder Include="WS\Converter\" />
         <Folder Include="WS\Dto\" />
         <Folder Include="WS\Facade\" />
+        
         <Folder Include="ZConfig\" />
+        
+        <Folder Include="Zynarator\" />
+        <Folder Include="Zynarator\Audit\" />
+        <Folder Include="Zynarator\Bean\" />
     </ItemGroup>
 
 </Project>

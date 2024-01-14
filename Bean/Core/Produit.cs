@@ -16,6 +16,6 @@ public class Produit: AuditBusinessObject
     public decimal PrixAchatMoyen { get; set; }
     public decimal Quantite { get; set; }
     public decimal SeuilAlert { get; set; }
-    
+
     public List<AchatItem> AchatItems { get; set; }
 }

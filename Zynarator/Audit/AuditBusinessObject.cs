@@ -7,7 +7,7 @@ using DotnetGenerator.Zynarator.Bean;
 
 namespace DotnetGenerator.Zynarator.Audit;
 
-public class AuditBusinessObject : BusinessObject
+public abstract class AuditBusinessObject : BusinessObject
 {
     [DataType(DataType.DateTime)]
     public DateTime CreatedOn { get; set; }
