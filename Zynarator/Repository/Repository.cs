@@ -39,12 +39,14 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
     public async Task<TEntity?> FindById(int id) => 
         await IncludedTable.FirstOrDefaultAsync(i => i.Id == id);
 
-    public async Task<List<TEntity>?> FindAll() =>
+    public async Task<List<TEntity>> FindAll() =>
         await IncludedTable.ToListAsync();
 
-    public async Task<List<TEntity>?> Filter(Expression<Func<TEntity, bool>> predicate) =>
-        await IncludedTable.Where(predicate).ToListAsync();
-    
+    public async Task<List<TEntity>> Filter(Expression<Func<TEntity, bool>> predicate)
+    {
+        return await IncludedTable.Where(predicate).ToListAsync();
+    }
+
     public async Task<int> Save(TEntity item)
     {
         Context.Add(item);

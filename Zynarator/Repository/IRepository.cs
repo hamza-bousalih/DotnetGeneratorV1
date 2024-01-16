@@ -1,14 +1,15 @@
 using System.Linq.Expressions;
 using DotnetGenerator.Zynarator.Audit;
+using DotnetGenerator.Zynarator.Bean;
 
 namespace DotnetGenerator.Zynarator.Repository;
 
-public interface IRepository<TEntity> where TEntity : AuditBusinessObject
+public interface IRepository<TEntity> where TEntity : BusinessObject
 {
     // Retrieve operations
     Task<TEntity?> FindById(int id);
-    Task<List<TEntity>?> FindAll();
-    Task<List<TEntity>?> Filter(Expression<Func<TEntity, bool>> predicate);
+    Task<List<TEntity>> FindAll();
+    Task<List<TEntity>> Filter(Expression<Func<TEntity, bool>> predicate);
 
     // Create operations
     Task<int> Save(TEntity entity);
