@@ -34,10 +34,9 @@
         <Folder Include="WS\Facade\" />
         
         <Folder Include="ZConfig\" />
-        
-        <Folder Include="Zynarator\" />
         <Folder Include="Zynarator\Audit\" />
         <Folder Include="Zynarator\Bean\" />
+        <Folder Include="Zynarator\Service\" />
     </ItemGroup>
 
 </Project>

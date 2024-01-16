@@ -5,5 +5,5 @@ namespace DotnetGenerator.Dao.Facade;
 
 public interface AchatDao: IRepository<Achat>
 {
-    public Task<int> DeleteByClient(int clientId);
+    public Task<int> DeleteByClientId(int id);
 }

@@ -8,7 +8,7 @@ namespace DotnetGenerator.Dao.Impl;
 
 public class AchatDaoImpl: Repository<Achat>, AchatDao
 {
-    public AchatDaoImpl(AppDbContext context, IEnumerable<Achat> table) : base(context, table)
+    public AchatDaoImpl(AppDbContext context) : base(context, context.Achats)
     {
     }
 
@@ -25,6 +25,6 @@ public class AchatDaoImpl: Repository<Achat>, AchatDao
             .Include(a => a.Client);
     }
 
-    public async Task<int> DeleteByClient(int clientId) =>
-        await DeleteIf(item => item.Client.Id == clientId);
+    public async Task<int> DeleteByClientId(int id) =>
+        await DeleteIf(item => item.Client.Id == id);
 }

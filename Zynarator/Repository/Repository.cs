@@ -14,7 +14,7 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
     protected readonly IQueryable<TEntity> Table;
     protected IQueryable<TEntity> IncludedTable;
 
-    public Repository(AppDbContext context, IEnumerable<TEntity> table)
+    public Repository(AppDbContext context, DbSet<TEntity> table)
     {
         Context = context;
         Table = table.AsQueryable();
