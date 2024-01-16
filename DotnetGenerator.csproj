@@ -27,12 +27,12 @@
         <Folder Include="Bean\Core\" />
         
         <Folder Include="WS\Converter\" />
-        <Folder Include="WS\Dto\" />
         <Folder Include="WS\Facade\" />
         
         <Folder Include="ZConfig\" />
         <Folder Include="Zynarator\Audit\" />
         <Folder Include="Zynarator\Bean\" />
+        <Folder Include="Zynarator\Controller\" />
     </ItemGroup>
 
 </Project>
