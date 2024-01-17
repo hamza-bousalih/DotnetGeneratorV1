@@ -3,7 +3,6 @@ namespace DotnetGenerator.Zynarator.Bean;
 public abstract class BusinessObject
 {
     public int Id { get; set; }
-    public string? Label { get; set; }
 
     protected BusinessObject()
     {

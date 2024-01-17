@@ -1,25 +1,44 @@
+using DotnetGenerator;
 using DotnetGenerator.Data;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddLamar();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Host.UseLamar((_, registry) => registry
-    .Use<DataLoader>().Scoped()
-);
+builder.Host.UseLamar((_, registry) => registry.InjectServices().InjectRepositories());
 
+// builder.Services.AddDbContext<AppDbContext>(
+//     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+var connectionString = "server=localhost;user=root;password=;database=stocky";
 builder.Services.AddDbContext<AppDbContext>(
-    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options => options.UseMySql(
+        connectionString,
+        new MySqlServerVersion(new Version(8, 0, 29)))
+    );
+
 
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        policyBuilder => policyBuilder
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .WithExposedHeaders("Content-Disposition")
+            .SetPreflightMaxAge(TimeSpan.FromMinutes(5))
+            .Build());
+});
 
 
 var app = builder.Build();

@@ -27,8 +27,6 @@
         <Folder Include="Bean\Core\" />
         
         <Folder Include="WS\Converter\" />
-        
-        <Folder Include="ZConfig\" />
         <Folder Include="Zynarator\Audit\" />
         <Folder Include="Zynarator\Bean\" />
     </ItemGroup>

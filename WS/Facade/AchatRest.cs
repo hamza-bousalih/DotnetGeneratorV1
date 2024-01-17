@@ -16,7 +16,7 @@ public class AcahtRest :  BaseController<Achat, AchatDto, AchatService>
         base(container, mapper)
     {
     }
-        
+
     [HttpGet("id/{id:int}")]
     public override Task <ActionResult<AchatDto>> FindById(int id) => base.FindById(id);
 
