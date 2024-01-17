@@ -9,8 +9,8 @@ public interface IService<TEntity> where TEntity : BusinessObject
     Task<int> Create(List<TEntity> items);
     Task<int> Update(TEntity item);
     Task<int> Update(List<TEntity> items);
-    Task<TEntity> GetById(int id);
-    Task<int> Delete(int id);
+    Task<TEntity> FindById(int id);
+    Task<int> DeleteById(int id);
     Task<int> Delete(TEntity item);
     Task<int> Delete(List<TEntity> items);
 }
