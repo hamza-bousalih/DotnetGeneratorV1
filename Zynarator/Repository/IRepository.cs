@@ -7,7 +7,7 @@ namespace DotnetGenerator.Zynarator.Repository;
 public interface IRepository<TEntity> where TEntity : BusinessObject
 {
     // Retrieve operations
-    Task<TEntity?> FindById(int id);
+    Task<TEntity?> FindById(long id);
     Task<List<TEntity>> FindAll();
     Task<List<TEntity>> Filter(Expression<Func<TEntity, bool>> predicate);
 
@@ -22,7 +22,7 @@ public interface IRepository<TEntity> where TEntity : BusinessObject
     // Delete operations
     Task<int> Delete(TEntity entity);
     Task<int> Delete(List<TEntity> entities);
-    Task<int> DeleteById(int id);
+    Task<int> DeleteById(long id);
 
     // Count operations
     Task<int> Count();

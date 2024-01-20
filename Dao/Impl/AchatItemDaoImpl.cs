@@ -25,15 +25,15 @@ public class AchatItemDaoImpl: Repository<AchatItem>, AchatItemDao
             .Include(a => a.Achat);
     }
 
-    public async Task<int> DeleteByAchatId(int id)=>
+    public async Task<int> DeleteByAchatId(long id)=>
         await DeleteIf(item => item.Achat!.Id == id);
 
-    public async Task<int> DeleteByProduitId(int id)=>
+    public async Task<int> DeleteByProduitId(long id)=>
         await DeleteIf(item => item.Produit!.Id == id);
 
-    public async Task<List<AchatItem>?> FindByAchatId(int id) => 
+    public async Task<List<AchatItem>?> FindByAchatId(long id) => 
         await FindListIf(item => item.Achat!.Id == id);
 
-    public async Task<List<AchatItem>?> FindByProduitId(int id) => 
+    public async Task<List<AchatItem>?> FindByProduitId(long id) => 
         await FindListIf(item => item.Produit!.Id == id);
 }

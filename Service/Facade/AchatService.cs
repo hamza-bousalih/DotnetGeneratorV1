@@ -5,6 +5,6 @@ namespace DotnetGenerator.Service.Facade;
 
 public interface AchatService: IService<Achat>
 {
-    public Task<int> DeleteByClientId(int id);
-    public Task<List<Achat>?> FindByClientId(int id);
+    public Task<int> DeleteByClientId(long id);
+    public Task<List<Achat>?> FindByClientId(long id);
 }

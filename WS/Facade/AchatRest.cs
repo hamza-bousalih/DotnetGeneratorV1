@@ -18,7 +18,7 @@ public class AcahtRest :  BaseController<Achat, AchatDto, AchatService>
     }
 
     [HttpGet("id/{id:int}")]
-    public override Task <ActionResult<AchatDto>> FindById(int id) => base.FindById(id);
+    public override Task <ActionResult<AchatDto>> FindById(long id) => base.FindById(id);
 
     [HttpGet]
     public override Task <ActionResult<List<AchatDto>>> FindAll() => base.FindAll();
@@ -33,10 +33,10 @@ public class AcahtRest :  BaseController<Achat, AchatDto, AchatService>
     public override Task<ActionResult<AchatDto>> Update(AchatDto dto) => base.Update(dto);
 
     [HttpPut("all")]
-    public override Task<ActionResult<List<AchatDto>>?> Update(List<AchatDto> dtos) => base.Update(dtos);
+    public override Task<ActionResult<List<AchatDto>>> Update(List<AchatDto> dtos) => base.Update(dtos);
 
     [HttpDelete("id/{id:int}")]
-    public override Task<ActionResult<int>> DeleteById(int id) => base.DeleteById(id);
+    public override Task<ActionResult<int>> DeleteById(long id) => base.DeleteById(id);
 
     [HttpDelete]
     public override Task<ActionResult<int>> Delete(AchatDto dto) => base.Delete(dto);
@@ -50,6 +50,7 @@ public class AcahtRest :  BaseController<Achat, AchatDto, AchatService>
     public async Task<ActionResult<List<AchatDto>>> FindByClientId(int id)
     {
         var found = await Service.FindByClientId(id);
+        if (found is null) return new NotFoundObjectResult("There is no achats with this client!");
         return Ok(ToDto(found));
     }
 }

@@ -13,7 +13,6 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
     protected readonly AppDbContext Context;
     protected readonly IQueryable<TEntity> Table;
     protected IQueryable<TEntity> IncludedTable;
-    private Expression<Func<TEntity, bool>> _expression;
 
     public Repository(AppDbContext context, DbSet<TEntity> table)
     {
@@ -38,9 +37,18 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
     {
         properties?.Each(SetEntry);
     }
+    
+    protected async Task<int> DeleteIf(Expression<Func<TEntity, bool>> predicate) => 
+        await Table.Where(predicate).ExecuteDeleteAsync();
 
-    public async Task<TEntity?> FindById(int id) => 
-        await IncludedTable.FirstOrDefaultAsync(i => i.Id == id);
+    protected async Task<TEntity?> FindIf(Expression<Func<TEntity, bool>> predicate) => 
+        await Table.FirstOrDefaultAsync(predicate);
+    
+    protected async Task<List<TEntity>?> FindListIf(Expression<Func<TEntity, bool>> predicate) => 
+        await Table.Where(predicate).ToListAsync();
+
+    public async Task<TEntity?> FindById(long id) => 
+        await FindIf(i => i.Id == id);
 
     public async Task<List<TEntity>> FindAll() =>
         await IncludedTable.ToListAsync();
@@ -80,16 +88,7 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
         return items;
     }
 
-    protected async Task<int> DeleteIf(Expression<Func<TEntity, bool>> predicate) => 
-        await Table.Where(predicate).ExecuteDeleteAsync();
-
-    protected async Task<TEntity?> FindIf(Expression<Func<TEntity, bool>> predicate) => 
-        await Table.Where(predicate).FirstOrDefaultAsync();
-    
-    protected async Task<List<TEntity>?> FindListIf(Expression<Func<TEntity, bool>> predicate) => 
-        await Table.Where(predicate).ToListAsync();
-
-    public async Task<int> DeleteById(int id) =>
+    public async Task<int> DeleteById(long id) =>
         await DeleteIf(item => item.Id == id);
     
     public async Task<int> Delete(TEntity item) => 

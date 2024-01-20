@@ -21,12 +21,12 @@ public class AchatServiceImpl: Service<Achat, AchatDao>, AchatService
         return await Repository.FindByReferenceEntity(t.Reference);
     }
 
-    protected override async Task DeleteAssociatedLists(int id)
+    protected override async Task DeleteAssociatedLists(long id)
     {
         await _achatItemService.DeleteByAchatId(id);
     }
     
-    public Task<int> DeleteByClientId(int id) => Repository.DeleteByClientId(id);
+    public Task<int> DeleteByClientId(long id) => Repository.DeleteByClientId(id);
 
-    public Task<List<Achat>?> FindByClientId(int id) => Repository.FindByClientId(id);
+    public Task<List<Achat>?> FindByClientId(long id) => Repository.FindByClientId(id);
 }

@@ -12,7 +12,7 @@ public abstract class Service<TEntity, TRepository>: IService<TEntity>
     
     protected Service(IContainer container) => Repository = container.GetInstance<TRepository>();
     
-    public virtual async Task<TEntity> FindById(int id) => 
+    public virtual async Task<TEntity> FindById(long id) => 
         await Repository.FindById(id) ?? throw new Exception("No Instance Found For id: " + id);
 
     public virtual async Task<TEntity> Create(TEntity item)
@@ -53,7 +53,7 @@ public abstract class Service<TEntity, TRepository>: IService<TEntity>
         return await Repository.Update(items);
     }
 
-    public virtual async Task<int> DeleteById(int id)
+    public virtual async Task<int> DeleteById(long id)
     {
         await DeleteAssociatedLists(id);
         return await Repository.DeleteById(id);
@@ -69,5 +69,5 @@ public abstract class Service<TEntity, TRepository>: IService<TEntity>
         return t.Id == 0 ? null : await FindById(t.Id);
     }
     
-    protected virtual Task DeleteAssociatedLists(int id) => Task.CompletedTask;
+    protected virtual Task DeleteAssociatedLists(long id) => Task.CompletedTask;
 }

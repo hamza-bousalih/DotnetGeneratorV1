@@ -25,10 +25,10 @@ public class AchatDaoImpl: Repository<Achat>, AchatDao
             .Include(a => a.Client);
     }
 
-    public async Task<int> DeleteByClientId(int id) =>
+    public async Task<int> DeleteByClientId(long id) =>
         await DeleteIf(item => item.Client !=null && item.Client.Id == id);
 
-    public async Task<List<Achat>?> FindByClientId(int id)
+    public async Task<List<Achat>?> FindByClientId(long id)
     {
         return await FindListIf(item => item.Client != null && item.Client.Id == id);
     }

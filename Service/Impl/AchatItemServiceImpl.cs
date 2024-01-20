@@ -12,11 +12,11 @@ public class AchatItemServiceImpl: Service<AchatItem, AchatItemDao>, AchatItemSe
     {
     }
 
-    public Task<int> DeleteByAchatId(int id) => Repository.DeleteByAchatId(id);
+    public Task<int> DeleteByAchatId(long id) => Repository.DeleteByAchatId(id);
 
-    public Task<int> DeleteByProduitId(int id) => Repository.DeleteByProduitId(id);
+    public Task<int> DeleteByProduitId(long id) => Repository.DeleteByProduitId(id);
 
-    public Task<List<AchatItem>?> FindByAchatId(int id) => Repository.FindByAchatId(id);
+    public Task<List<AchatItem>?> FindByAchatId(long id) => Repository.FindByAchatId(id);
 
-    public Task<List<AchatItem>?> FindByProduitId(int id) => Repository.FindByProduitId(id);
+    public Task<List<AchatItem>?> FindByProduitId(long id) => Repository.FindByProduitId(id);
 }
