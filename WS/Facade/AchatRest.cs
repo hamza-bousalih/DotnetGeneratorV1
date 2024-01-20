@@ -24,16 +24,16 @@ public class AcahtRest :  BaseController<Achat, AchatDto, AchatService>
     public override Task <ActionResult<List<AchatDto>>> FindAll() => base.FindAll();
 
     [HttpPost]
-    public override Task<ActionResult<int>> Create(AchatDto dto) => base.Create(dto);
+    public override Task<ActionResult<AchatDto>> Create(AchatDto dto) => base.Create(dto);
 
     [HttpPost("all")]
-    public override Task<ActionResult<int>> Create(List<AchatDto> dtos) => base.Create(dtos);
+    public override Task<ActionResult<List<AchatDto>>> Create(List<AchatDto> dtos) => base.Create(dtos);
 
     [HttpPut]
-    public override Task<ActionResult<int>> Update(AchatDto dto) => base.Update(dto);
+    public override Task<ActionResult<AchatDto>> Update(AchatDto dto) => base.Update(dto);
 
     [HttpPut("all")]
-    public override Task<ActionResult<int>> Update(List<AchatDto> dtos) => base.Update(dtos);
+    public override Task<ActionResult<List<AchatDto>>?> Update(List<AchatDto> dtos) => base.Update(dtos);
 
     [HttpDelete("id/{id:int}")]
     public override Task<ActionResult<int>> DeleteById(int id) => base.DeleteById(id);
@@ -43,4 +43,13 @@ public class AcahtRest :  BaseController<Achat, AchatDto, AchatService>
 
     [HttpDelete("multiple")]
     public override Task<ActionResult<int>> Delete(List<AchatDto> dtos) => base.Delete(dtos);
+    
+    //---------------------------------------------------------------------------------------
+    public async Task<ActionResult<int>> DeleteByClientId(int id) => Ok(await Service.DeleteByClientId(id));
+
+    public async Task<ActionResult<List<AchatDto>>> FindByClientId(int id)
+    {
+        var found = await Service.FindByClientId(id);
+        return Ok(ToDto(found));
+    }
 }

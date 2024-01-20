@@ -13,6 +13,7 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
     protected readonly AppDbContext Context;
     protected readonly IQueryable<TEntity> Table;
     protected IQueryable<TEntity> IncludedTable;
+    private Expression<Func<TEntity, bool>> _expression;
 
     public Repository(AppDbContext context, DbSet<TEntity> table)
     {
@@ -33,8 +34,10 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
             Context.Entry(property).State = EntityState.Unchanged;
     }
     
-    protected void SetEntry<TProperty>(IEnumerable<TProperty> properties) where TProperty : BusinessObject => 
-        properties.Each(SetEntry);
+    protected void SetEntry<TProperty>(IEnumerable<TProperty>? properties) where TProperty : BusinessObject
+    {
+        properties?.Each(SetEntry);
+    }
 
     public async Task<TEntity?> FindById(int id) => 
         await IncludedTable.FirstOrDefaultAsync(i => i.Id == id);
@@ -47,34 +50,44 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
         return await IncludedTable.Where(predicate).ToListAsync();
     }
 
-    public async Task<int> Save(TEntity item)
+    public async Task<TEntity> Save(TEntity item)
     {
         Context.Add(item);
         SetContextEntry(item);
-        return await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
+        return item;
     }
 
-    public async Task<int> Save(List<TEntity> items)
+    public async Task<List<TEntity>> Save(List<TEntity> items)
     {
         Context.AddRange(items);
         foreach (var item in items) SetContextEntry(item);
-        return await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
+        return items;
     }
 
-    public async Task<int> Update(TEntity item)
+    public async Task<TEntity> Update(TEntity item)
     {
         Context.Update(item);
-        return await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
+        return item;
     }
 
-    public async Task<int> Update(List<TEntity> items)
+    public async Task<List<TEntity>> Update(List<TEntity> items)
     {
         Context.UpdateRange(items);
-        return await Context.SaveChangesAsync();
+        await Context.SaveChangesAsync();
+        return items;
     }
 
     protected async Task<int> DeleteIf(Expression<Func<TEntity, bool>> predicate) => 
         await Table.Where(predicate).ExecuteDeleteAsync();
+
+    protected async Task<TEntity?> FindIf(Expression<Func<TEntity, bool>> predicate) => 
+        await Table.Where(predicate).FirstOrDefaultAsync();
+    
+    protected async Task<List<TEntity>?> FindListIf(Expression<Func<TEntity, bool>> predicate) => 
+        await Table.Where(predicate).ToListAsync();
 
     public async Task<int> DeleteById(int id) =>
         await DeleteIf(item => item.Id == id);
@@ -84,7 +97,7 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
 
     public async Task<int> Delete(List<TEntity> items) =>
         await DeleteIf(t => items.Map(i => i.Id).Contains(t.Id));
-
-
+    
     public async Task<int> Count() => await Table.CountAsync();
+
 }

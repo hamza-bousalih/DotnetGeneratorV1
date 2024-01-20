@@ -17,30 +17,31 @@ public abstract class BaseController<TEntity, TDto, TService> : ControllerConver
     protected BaseController(IServiceContext container, IMapper mapper) : base(mapper) =>
         Service = container.GetInstance<TService>();
     
-    public virtual async Task<ActionResult<List<TDto>>> FindAll() => Ok(ToDto(await Service.FindAll()));
+    public virtual async Task<ActionResult<List<TDto>>> FindAll() =>
+        Ok(ToDto(await Service.FindAll()));
     
-    public virtual async Task<ActionResult<int>> Create(TDto dto)
+    public virtual async Task<ActionResult<TDto>> Create(TDto dto)
     {
         var item = ToItem(dto);
         return Ok(await Service.Create(item));
     }
 
-    public virtual async Task<ActionResult<int>> Create(List<TDto> dtos)
+    public virtual async Task<ActionResult<List<TDto>>> Create(List<TDto> dtos)
     {
         var items = ToItem(dtos);
         return Ok(await Service.Create(items));
     }
 
-    public virtual async Task<ActionResult<int>> Update(TDto dto)
+    public virtual async Task<ActionResult<TDto>> Update(TDto dto)
     {
         var item = ToItem(dto);
         return Ok(await Service.Update(item));
     }
 
-    public virtual async Task<ActionResult<int>> Update(List<TDto> dtos)
+    public virtual async Task<ActionResult<List<TDto>>> Update(List<TDto> dtos)
     {
         var items = ToItem(dtos);
-        return Ok(await Service.Update(items));
+        return items.Count == 0 ? Conflict(dtos) : Ok(await Service.Update(items));
     }
     
     public virtual async Task<ActionResult<TDto>> FindById(int id)

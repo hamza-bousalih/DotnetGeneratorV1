@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using DotnetGenerator.Bean.Core;
 using DotnetGenerator.Dao.Facade;
 using DotnetGenerator.Data;
@@ -26,8 +27,14 @@ public class AchatItemDaoImpl: Repository<AchatItem>, AchatItemDao
     }
 
     public async Task<int> DeleteByAchatId(int id)=>
-        await DeleteIf(item => item.Achat.Id == id);
+        await DeleteIf(item => item.Achat!.Id == id);
 
     public async Task<int> DeleteByProduitId(int id)=>
-        await DeleteIf(item => item.Produit.Id == id);
+        await DeleteIf(item => item.Produit!.Id == id);
+
+    public async Task<List<AchatItem>?> FindByAchatId(int id) => 
+        await FindListIf(item => item.Achat!.Id == id);
+
+    public async Task<List<AchatItem>?> FindByProduitId(int id) => 
+        await FindListIf(item => item.Produit!.Id == id);
 }

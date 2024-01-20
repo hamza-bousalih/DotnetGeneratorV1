@@ -12,12 +12,12 @@ public interface IRepository<TEntity> where TEntity : BusinessObject
     Task<List<TEntity>> Filter(Expression<Func<TEntity, bool>> predicate);
 
     // Create operations
-    Task<int> Save(TEntity entity);
-    Task<int> Save(List<TEntity> entities);
+    Task<TEntity> Save(TEntity entity);
+    Task<List<TEntity>> Save(List<TEntity> entities);
 
     // Update operations
-    Task<int> Update(TEntity entity);
-    Task<int> Update(List<TEntity> entities);
+    Task<TEntity> Update(TEntity entity);
+    Task<List<TEntity>> Update(List<TEntity> entities);
 
     // Delete operations
     Task<int> Delete(TEntity entity);

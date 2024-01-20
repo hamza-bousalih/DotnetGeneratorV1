@@ -29,12 +29,6 @@ public class AppDbContext : DbContext
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         ApplyEntityChanges();
-        var entityEntries = ChangeTracker.Entries();
-        foreach (var entry in entityEntries)
-        {
-            if (entry.Entity is not Client client) continue;
-            Console.WriteLine("Client :: " + client.CreatedOn);
-        }
         return await base.SaveChangesAsync(cancellationToken);
     }
 

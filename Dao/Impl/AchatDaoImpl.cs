@@ -26,5 +26,13 @@ public class AchatDaoImpl: Repository<Achat>, AchatDao
     }
 
     public async Task<int> DeleteByClientId(int id) =>
-        await DeleteIf(item => item.Client.Id == id);
+        await DeleteIf(item => item.Client !=null && item.Client.Id == id);
+
+    public async Task<List<Achat>?> FindByClientId(int id)
+    {
+        return await FindListIf(item => item.Client != null && item.Client.Id == id);
+    }
+
+    public async Task<Achat?> FindByReferenceEntity(string reference) => 
+        await FindIf(el => el.Reference == reference);
 }

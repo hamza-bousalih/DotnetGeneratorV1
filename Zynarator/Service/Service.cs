@@ -14,28 +14,60 @@ public abstract class Service<TEntity, TRepository>: IService<TEntity>
     
     public virtual async Task<TEntity> FindById(int id) => 
         await Repository.FindById(id) ?? throw new Exception("No Instance Found For id: " + id);
+
+    public virtual async Task<TEntity> Create(TEntity item)
+    {
+        var loaded = await FindByReferenceEntity(item);
+        if (loaded == null) return await Repository.Save(item);
+        return loaded;
+    }
     
-    public virtual async Task<int> Create(TEntity item) => 
-        await Repository.Save(item);
-    
-    public virtual async Task<int> Create(List<TEntity> items) => 
-        await Repository.Save(items);
-    
+    public virtual async Task<List<TEntity>> Create(List<TEntity> items)
+    {
+        var list = new List<TEntity>();
+        foreach (var item in items)
+        {
+            var founded = await FindByReferenceEntity(item);
+            if (founded == null)
+                //TODO findOrSaveAssociatedObject(t);
+                await Repository.Save(item);
+            else list.Add(founded);
+        }
+        return list;
+    }
+
     public virtual async Task<List<TEntity>> FindAll() => 
         await Repository.FindAll();
     
-    public virtual async Task<int> Update(TEntity item) => 
+    public virtual async Task<TEntity> Update(TEntity item)
+    {
+        var loadedItem = await Repository.FindById(item.Id);
+        if (loadedItem == null) throw new Exception("errors.notFound");
+        //TODO UpdateWithAssociatedLists(t);
         await Repository.Update(item);
-    
-    public virtual async Task<int> Update(List<TEntity> items) =>
-        await Repository.Update(items);
-    
-    public virtual async Task<int> DeleteById(int id) => 
-        await Repository.DeleteById(id);
-    
+        return loadedItem;
+    }
+
+    public virtual async Task<List<TEntity>> Update(List<TEntity> items)
+    {
+        return await Repository.Update(items);
+    }
+
+    public virtual async Task<int> DeleteById(int id)
+    {
+        await DeleteAssociatedLists(id);
+        return await Repository.DeleteById(id);
+    }
+
     public virtual async Task<int> Delete(TEntity item) => 
         await Repository.Delete(item);
     
     public virtual async Task<int> Delete(List<TEntity> items) => 
         await Repository.Delete(items);
+    
+    protected virtual async Task<TEntity?> FindByReferenceEntity(TEntity t) {
+        return t.Id == 0 ? null : await FindById(t.Id);
+    }
+    
+    protected virtual Task DeleteAssociatedLists(int id) => Task.CompletedTask;
 }

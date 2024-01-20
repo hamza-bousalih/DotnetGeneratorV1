@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections;
+using AutoMapper;
 using DotnetGenerator.Zynarator.Bean;
 using DotnetGenerator.Zynarator.Dto;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,12 @@ public abstract class ControllerConverter<TEntity, TDto> : ControllerBase
     
     protected ControllerConverter(IMapper mapper) => _mapper = mapper;
 
-    protected virtual TDto ConvertToDto(TEntity item) => _mapper.Map<TDto>(item);
+    private TDto ConvertToDto(TEntity item) => _mapper.Map<TDto>(item);
+    private TEntity ConvertToItem(TDto dto) => _mapper.Map<TEntity>(dto);
 
-    protected virtual TEntity ConvertToItem(TDto dto) => _mapper.Map<TEntity>(dto);
-
-    protected TDto ToDto(TEntity item) => ConvertToDto(item);
-    protected TEntity ToItem(TDto dto) => ConvertToItem(dto);
+    protected TDto? ToDto(TEntity? item) => item == null ? null: ConvertToDto(item);
+    protected TEntity? ToItem(TDto? dto) => dto == null ? null: ConvertToItem(dto);
     
-    protected List<TEntity> ToItem(List<TDto> dtos) => dtos.Select(ToItem).ToList();
-    protected List<TDto> ToDto(List<TEntity> items) => items.Select(ToDto).ToList(); 
+    protected List<TEntity?> ToItem(List<TDto>? dtos) => dtos is null ? new List<TEntity?>() : dtos.Select(ToItem).ToList();
+    protected List<TDto?> ToDto(List<TEntity?>? items) => items is null ? new List<TDto?>() : items.Select(ToDto).ToList(); 
 }
