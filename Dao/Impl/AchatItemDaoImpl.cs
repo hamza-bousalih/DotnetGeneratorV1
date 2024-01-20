@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using DotnetGenerator.Bean.Core;
 using DotnetGenerator.Dao.Facade;
 using DotnetGenerator.Data;

@@ -34,18 +34,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy",
-        policyBuilder => policyBuilder
-            .AllowAnyMethod()
-            .AllowCredentials()
-            .WithOrigins("http://localhost:4200")
-            .AllowAnyHeader()
-            .WithExposedHeaders("Content-Disposition")
-            .SetPreflightMaxAge(TimeSpan.FromMinutes(5))
-            .Build());
-});
+builder.Services.ConfigCors();
 
 
 var app = builder.Build();
@@ -63,6 +52,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors("CorsPolicy");
+app.UseCors(CorsConfig.CorsName);
 
 app.Run();
