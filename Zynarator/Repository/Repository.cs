@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using DotnetGenerator.Data;
 using DotnetGenerator.Zynarator.Audit;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotnetGenerator.Zynarator.Repository;
 
-public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusinessObject
+public class Repository<TEntity> : IRepository<TEntity> where TEntity : AuditBusinessObject
 {
     protected readonly AppDbContext Context;
     protected readonly IQueryable<TEntity> Table;
@@ -24,7 +23,7 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
     protected virtual void SetContextEntry(TEntity item)
     {
     }
-    
+
     protected virtual IQueryable<TEntity> SetIncluded() => Table;
 
     protected void SetEntry<TProperty>(TProperty? property) where TProperty : BusinessObject
@@ -32,22 +31,22 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
         if (property != null && property.Id != 0)
             Context.Entry(property).State = EntityState.Unchanged;
     }
-    
+
     protected void SetEntry<TProperty>(IEnumerable<TProperty>? properties) where TProperty : BusinessObject
     {
         properties?.Each(SetEntry);
     }
-    
-    protected async Task<int> DeleteIf(Expression<Func<TEntity, bool>> predicate) => 
+
+    protected async Task<int> DeleteIf(Expression<Func<TEntity, bool>> predicate) =>
         await Table.Where(predicate).ExecuteDeleteAsync();
 
-    protected async Task<TEntity?> FindIf(Expression<Func<TEntity, bool>> predicate) => 
+    protected async Task<TEntity?> FindIf(Expression<Func<TEntity, bool>> predicate) =>
         await Table.FirstOrDefaultAsync(predicate);
-    
-    protected async Task<List<TEntity>?> FindListIf(Expression<Func<TEntity, bool>> predicate) => 
+
+    protected async Task<List<TEntity>?> FindListIf(Expression<Func<TEntity, bool>> predicate) =>
         await Table.Where(predicate).ToListAsync();
 
-    public async Task<TEntity?> FindById(long id) => 
+    public async Task<TEntity?> FindById(long id) =>
         await FindIf(i => i.Id == id);
 
     public async Task<List<TEntity>> FindAll() =>
@@ -90,13 +89,20 @@ public class Repository<TEntity>: IRepository<TEntity> where TEntity : AuditBusi
 
     public async Task<int> DeleteById(long id) =>
         await DeleteIf(item => item.Id == id);
-    
-    public async Task<int> Delete(TEntity item) => 
+
+    public async Task<int> Delete(TEntity item) =>
         await DeleteById(item.Id);
 
     public async Task<int> Delete(List<TEntity> items) =>
         await DeleteIf(t => items.Map(i => i.Id).Contains(t.Id));
-    
+
     public async Task<int> Count() => await Table.CountAsync();
 
+    public async Task<List<TEntity>> FindPaginated(int page = 1, int size = 10)
+    {
+        return await Table
+            .Skip(page == 0 ? 0 : (page - 1) * size)
+            .Take(size)
+            .ToListAsync();
+    }
 }

@@ -16,7 +16,7 @@ public class AchatServiceImpl: Service<Achat, AchatDao>, AchatService
         _achatItemService = container.GetInstance<AchatItemService>();
     }
 
-    protected override async Task<Achat?> FindByReferenceEntity(Achat t)
+    protected override async Task<Achat?> FindByReference(Achat t)
     {
         return await Repository.FindByReferenceEntity(t.Reference);
     }

@@ -1,35 +1,38 @@
 using DotnetGenerator.Bean.Core;
+using DotnetGenerator.Service.Facade;
+using Lamar;
 
 namespace DotnetGenerator.Data;
 
 public class DataLoader
 {
-    private readonly AppDbContext _context;
+    private readonly AchatService _achatService;
 
-    public DataLoader(AppDbContext context)
+    public DataLoader(IContainer container)
     {
-        _context = context;
+        _achatService = container.GetInstance<AchatService>();
     }
 
-    public Task<int> Generate()
+    public async Task Generate()
     {
-        GenerateClients();
-        var saveChangesAsync = _context.SaveChangesAsync();
-        return saveChangesAsync;
+        await GenerateAchats();
     }
 
-    private void GenerateClients()
+    private async Task GenerateAchats()
     {
-        for (var i = 0; i < 10; i++)
+        var items = new List<Achat>();
+        for (var i = 0; i < 100; i++)
         {
-            var item = new Client()
+            var item = new Achat()
             {
-                Cin = "cin" + i,
-                Email = "Email" + i,
+                Total = i,
+                TotalPaye = i + 1,
                 Description = "Description" + i,
-                Nom = "Nom" + i,
+                Reference = "Reference" + i,
+                DateAchat = DateTime.Now,
             };
-            _context.Clients.Add(item);
+            items.Add(item);
         }
+        await _achatService.Create(items);
     }
 }

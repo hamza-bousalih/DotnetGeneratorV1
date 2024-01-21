@@ -26,4 +26,7 @@ public interface IRepository<TEntity> where TEntity : BusinessObject
 
     // Count operations
     Task<int> Count();
+    
+    // Pagination
+    Task<List<TEntity>> FindPaginated(int page, int size);
 }

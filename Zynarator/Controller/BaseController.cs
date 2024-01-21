@@ -24,6 +24,13 @@ public abstract class BaseController<TEntity, TDto, TService> : ControllerConver
         if (found.IsNullOrEmpty()) NotFound("No Data Found!");
         return Ok(ToDto(found));
     }
+    
+    public virtual async Task<ActionResult<List<TDto>>> FindPaginated(int page, int size)
+    {
+        var found = await Service.FindPaginated(page, size);
+        if (found.IsNullOrEmpty()) NotFound("No Data Found!");
+        return Ok(ToDto(found));
+    }
 
     public virtual async Task<ActionResult<TDto>> Create(TDto dto)
     {

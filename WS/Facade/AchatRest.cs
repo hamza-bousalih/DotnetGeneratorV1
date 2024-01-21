@@ -23,6 +23,9 @@ public class AcahtRest :  BaseController<Achat, AchatDto, AchatService>
     [HttpGet]
     public override Task <ActionResult<List<AchatDto>>> FindAll() => base.FindAll();
 
+    [HttpGet("find-paginated/page={page:int}/size={size:int}")]
+    public override Task <ActionResult<List<AchatDto>>> FindPaginated(int page, int size) => base.FindPaginated(page, size);
+
     [HttpPost]
     public override Task<ActionResult<AchatDto>> Create(AchatDto dto) => base.Create(dto);
 
@@ -45,8 +48,10 @@ public class AcahtRest :  BaseController<Achat, AchatDto, AchatService>
     public override Task<ActionResult<int>> Delete(List<AchatDto> dtos) => base.Delete(dtos);
     
     //---------------------------------------------------------------------------------------
-    public async Task<ActionResult<int>> DeleteByClientId(int id) => Ok(await Service.DeleteByClientId(id));
+    [HttpDelete("/client/{id:long}")]
+    public async Task<ActionResult<int>> DeleteByClientId(long id) => Ok(await Service.DeleteByClientId(id));
 
+    [HttpGet("/client/{id:long}")]
     public async Task<ActionResult<List<AchatDto>>> FindByClientId(int id)
     {
         var found = await Service.FindByClientId(id);
