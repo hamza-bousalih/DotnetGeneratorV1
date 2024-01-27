@@ -2,7 +2,7 @@
 
 namespace DotnetGenerator.WS.Dto;
 
-public class AchatItemDto: BaseDto
+public class AchatItemDto: AuditBaseDto
 {
     public decimal PrixUnitaire { get; set; }
     public decimal PrixVente { get; set; }

@@ -19,9 +19,9 @@ public abstract class SpecificationHelper<TEntity, TCriteria> : Specification<TE
 
     protected void AddPredicateId()
     {
-        AddPredicateIf(Criteria.Id != 0, e => e.Id == Criteria.Id);
-        AddPredicateIf(Criteria.NotId != 0, e => e.Id != Criteria.NotId);
-        AddPredicateIf(Criteria.IdsIn?.Count > 0, e => e.Id.In(Criteria.IdsIn));
-        AddPredicateIf(Criteria.IdsNotIn?.Count > 0, e => e.Id.NotIn(Criteria.IdsIn));
+        AddPredicateIf(Criteria.Id is not null && Criteria.Id != 0, e => e.Id.Equals(Criteria.Id));
+        AddPredicateIf(Criteria.NotId is not null && Criteria.NotId != 0, e => !e.Id.Equals(Criteria.NotId));
+        AddPredicateIf(Criteria.IdsIn is not null && Criteria.IdsIn?.Count > 0, e => e.Id.In(Criteria.IdsIn));
+        AddPredicateIf(Criteria.IdsNotIn is not null && Criteria.IdsNotIn?.Count > 0, e => e.Id.NotIn(Criteria.IdsNotIn));
     }
 }

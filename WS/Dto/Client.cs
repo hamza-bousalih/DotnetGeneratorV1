@@ -2,7 +2,7 @@
 
 namespace DotnetGenerator.WS.Dto;
 
-public class ClientDto: BaseDto
+public class ClientDto: AuditBaseDto
 {
     public string? Cin { get; set; }
     public string? Nom { get; set; }

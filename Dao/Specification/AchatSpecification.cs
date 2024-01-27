@@ -30,9 +30,9 @@ public class AchatSpecification: AbstractSpecification<Achat, AchatCriteria>
         AddPredicate(e => e.TotalPaye.GreaterThen(Criteria.TotalPayeMin));
         AddPredicate(e => e.TotalPaye.LessThen(Criteria.TotalPayeMax));
 
-        AddPredicate(e => e.DateAchat.EqualsDate(Criteria.TotalPaye));
-        AddPredicate(e => e.DateAchat.GreaterThen(Criteria.TotalPayeMin));
-        AddPredicate(e => e.DateAchat.LessThen(Criteria.TotalPayeMax));
+        AddPredicate(e => e.DateAchat.EqualsDate(Criteria.DateAchat));
+        AddPredicate(e => e.DateAchat.From(Criteria.DateAchatFrom));
+        AddPredicate(e => e.DateAchat.To(Criteria.DateAchatTo));
 
         AddPredicateIf(Criteria.Client is not null, e => e.Client!.Id == Criteria.Client!.Id);
         AddPredicateIf(Criteria.Clients is not null, e => e.Client!.Id.In(Criteria.Clients!.Ids()));

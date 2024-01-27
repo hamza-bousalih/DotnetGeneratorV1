@@ -3,7 +3,7 @@ using DotnetGenerator.Zynarator.Dto;
 
 namespace DotnetGenerator.WS.Dto;
 
-public class AchatDto: BaseDto
+public class AchatDto: AuditBaseDto
 {
     public string? Reference { get; set; }
     public DateTime DateAchat { get; set; }

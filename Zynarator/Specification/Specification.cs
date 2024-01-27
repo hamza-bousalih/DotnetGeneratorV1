@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using DotnetGenerator.Zynarator.Bean;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,8 +34,10 @@ public abstract class Specification<TEntity> where TEntity : BusinessObject
 
     public async Task<List<TEntity>> Search()
     {
-        Expression<Func<TEntity, bool>> predicate = e => true;
+        Func<TEntity, bool> predicate = e => true;
         if (Predicates.Count > 0) predicate = e => Predicates.TrueForAll(p => p.Invoke(e));
-        return Query.AsEnumerable().Where(predicate.Compile()).ToList();
+        var list = await Query.ToListAsync();
+        return list.Where(e => predicate.Invoke(e)).ToList();
+        // return list;
     }
 }

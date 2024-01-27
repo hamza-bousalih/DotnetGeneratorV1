@@ -3,7 +3,7 @@ using DotnetGenerator.Zynarator.Dto;
 
 namespace DotnetGenerator.WS.Dto;
 
-public class ProduitDto: BaseDto
+public class ProduitDto: AuditBaseDto
 {
     public string? Reference { get; set; }
     public string? Libelle { get; set; }
