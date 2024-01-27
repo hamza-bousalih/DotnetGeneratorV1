@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using DotnetGenerator;
 using DotnetGenerator.Data;
 using DotnetGenerator.ZConfig;
@@ -17,10 +16,16 @@ builder.Services.AddDbContext<AppDbContext>(
     options => options.UseMySql(
         connectionString,
         new MySqlServerVersion(new Version(8, 0, 29)))
-    );
+);
 
 // Add services to the container.
-builder.Host.UseLamar((_, registry) => registry.InjectServices().InjectRepositories());
+builder.Host.UseLamar((_, registry) => registry
+    .InjectServices()
+    .InjectRepositories()
+    .InjectSpecifications()
+    .InjectLoader()
+);
+
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {

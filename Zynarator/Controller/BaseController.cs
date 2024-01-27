@@ -1,5 +1,6 @@
 using AutoMapper;
 using DotnetGenerator.Zynarator.Bean;
+using DotnetGenerator.Zynarator.Criteria;
 using DotnetGenerator.Zynarator.Dto;
 using DotnetGenerator.Zynarator.Service;
 using Lamar;
@@ -8,23 +9,24 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DotnetGenerator.Zynarator.Controller;
 
-public abstract class BaseController<TEntity, TDto, TService> : ControllerConverter<TEntity, TDto>
+public abstract class BaseController<TEntity, TDto, TService, TCriteria> : ControllerConverter<TEntity, TDto>
     where TEntity : BusinessObject
     where TDto : BaseDto
-    where TService : IService<TEntity>
+    where TCriteria : BaseCriteria
+    where TService : IService<TEntity, TCriteria>
 {
     protected TService Service;
-    
+
     protected BaseController(IServiceContext container, IMapper mapper) : base(mapper) =>
         Service = container.GetInstance<TService>();
-    
+
     public virtual async Task<ActionResult<List<TDto>>> FindAll()
     {
         var found = await Service.FindAll();
         if (found.IsNullOrEmpty()) NotFound("No Data Found!");
         return Ok(ToDto(found));
     }
-    
+
     public virtual async Task<ActionResult<List<TDto>>> FindPaginated(int page, int size)
     {
         var found = await Service.FindPaginated(page, size);
@@ -59,7 +61,7 @@ public abstract class BaseController<TEntity, TDto, TService> : ControllerConver
         var items = ToItem(dtos);
         return Ok(await Service.Update(items));
     }
-    
+
     public virtual async Task<ActionResult<TDto>> FindById(long id)
     {
         var found = await Service.FindById(id);
@@ -86,5 +88,17 @@ public abstract class BaseController<TEntity, TDto, TService> : ControllerConver
         var items = ToItem(dtos);
         var result = await Service.Delete(items);
         return Ok(result);
+    }
+
+    public virtual async Task<ActionResult<List<TDto?>>> FindByCriteria(TCriteria criteria)
+    {
+        var found = await Service.FindByCriteria(criteria);
+        return ToDto(found);
+    }
+
+    public virtual async Task<ActionResult<List<TDto?>>> FindPaginatedByCriteria(TCriteria criteria)
+    {
+        var found = await Service.FindPaginatedByCriteria(criteria);
+        return ToDto(found);
     }
 }

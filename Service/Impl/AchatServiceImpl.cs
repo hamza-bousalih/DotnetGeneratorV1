@@ -1,12 +1,14 @@
 using DotnetGenerator.Bean.Core;
+using DotnetGenerator.Dao.Criteria;
 using DotnetGenerator.Dao.Facade;
+using DotnetGenerator.Dao.Specification;
 using DotnetGenerator.Service.Facade;
 using DotnetGenerator.Zynarator.Service;
 using Lamar;
 
 namespace DotnetGenerator.Service.Impl;
 
-public class AchatServiceImpl: Service<Achat, AchatDao>, AchatService
+public class AchatServiceImpl: Service<Achat, AchatDao, AchatCriteria, AchatSpecification>, AchatService
 {
 
     private AchatItemService _achatItemService;
@@ -18,7 +20,7 @@ public class AchatServiceImpl: Service<Achat, AchatDao>, AchatService
 
     protected override async Task<Achat?> FindByReference(Achat t)
     {
-        return await Repository.FindByReferenceEntity(t.Reference);
+        return await Repository.FindByReferenceEntity(t.Reference!);
     }
 
     protected override async Task DeleteAssociatedLists(long id)
@@ -26,7 +28,13 @@ public class AchatServiceImpl: Service<Achat, AchatDao>, AchatService
         await _achatItemService.DeleteByAchatId(id);
     }
     
-    public Task<int> DeleteByClientId(long id) => Repository.DeleteByClientId(id);
+    public Task<int> DeleteByClientId(long id)
+    {
+        return Repository.DeleteByClientId(id);
+    }
 
-    public Task<List<Achat>?> FindByClientId(long id) => Repository.FindByClientId(id);
+    public Task<List<Achat>?> FindByClientId(long id)
+    {
+        return Repository.FindByClientId(id);
+    }
 }
