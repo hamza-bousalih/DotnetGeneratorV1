@@ -7,25 +7,39 @@ public static class SpecificationExtensions
 {
     public static bool IsNotNullOrEmpty(this string? value)
         => !value.IsNullOrEmpty();
+
     public static bool IsNullOrEmpty(this string? value)
         => string.IsNullOrWhiteSpace(value);
+
+    public static bool IsEqual(this DateTime? dateTime, DateTime? value)
+    {
+        return (dateTime.HasValue && value.HasValue) && (
+            dateTime.Value.Year == value.Value.Year
+            &&
+            dateTime.Value.Month == value.Value.Month
+            &&
+            dateTime.Value.Day == value.Value.Day
+            &&
+            dateTime.Value.Hour == value.Value.Hour
+            &&
+            dateTime.Value.Minute == value.Value.Minute
+            &&
+            dateTime.Value.Second == value.Value.Second
+        );
+    }
 
     public static bool In<T>(this T value, IEnumerable<T>? values)
         => values?.Contains(value) ?? false;
 
     public static bool NotIn<T>(this T value, IEnumerable<T>? values)
         => !value.In(values);
-    
+
     // string
-    public static bool EqualsString(this string? colValue, string? value)
-    {
-        return value.IsNullOrEmpty() || colValue == value;
-    }
-    
-    public static bool ContainsString(this string? colValue, string? value)
-    {
-        return value is null || colValue!.ContainsIgnoreCase(value);
-    }
+    public static bool EqualsString(this string? colValue, string? value) =>
+        value.IsNullOrEmpty() || colValue == value;
+
+    public static bool ContainsString(this string? colValue, string? value) =>
+        value is null || colValue!.ContainsIgnoreCase(value);
 
     // decimal
     public static bool EqualsDecimal(this decimal? colValue, string? value) =>
@@ -69,7 +83,7 @@ public static class SpecificationExtensions
 
     // datetime-string
     public static bool EqualsDate(this DateTime? colValue, string? value) =>
-        !DateTime.TryParse(value, out var parsed) || colValue == parsed;
+        !DateTime.TryParse(value, out var parsed) || colValue.IsEqual(parsed);
 
     public static bool GreaterThen(this DateTime? colValue, string? valueMin) =>
         !DateTime.TryParse(valueMin, out var parsedMin) || colValue >= parsedMin;
@@ -80,12 +94,10 @@ public static class SpecificationExtensions
     // dateTime
     public static bool EqualsDate(this DateTime? colValue, DateTime? value)
     {
-        //TODO fixe this: they are not equals
-        // WriteLine(colValue!.Value.Ticks + " :: " + value!.Value.Ticks);
-        return value is null || colValue!.Value.Equals(value);
+        return value is null || colValue.IsEqual(value);
     }
 
-    public static bool From(this DateTime? colValue, DateTime? fromDate) => 
+    public static bool From(this DateTime? colValue, DateTime? fromDate) =>
         fromDate is null || colValue!.Value.Ticks >= fromDate.Value.Ticks;
 
     public static bool To(this DateTime? colValue, DateTime? toDate)
@@ -95,9 +107,8 @@ public static class SpecificationExtensions
 
     // list
     public static IEnumerable<long> Ids<TProp>(this List<TProp>? list) where TProp : BaseCriteria =>
-        list is null ?
-            new List<long>() : 
-            list.Map(e => e.Id!.Value).ToList();
+        list is null ? new List<long>() : list.Map(e => e.Id!.Value).ToList();
 
-    private static bool ApproximatelyEquals(this double a, double b, double epsilon = 0.000001) => Math.Abs(a - b) < epsilon;
+    private static bool ApproximatelyEquals(this double a, double b, double epsilon = 0.000001) =>
+        Math.Abs(a - b) < epsilon;
 }

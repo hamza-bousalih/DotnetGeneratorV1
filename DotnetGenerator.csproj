@@ -27,8 +27,6 @@
     <ItemGroup>
         <Folder Include="Bean\Core\" />
         <Folder Include="Dao\Repository\" />
-        
-        <Folder Include="WS\Converter\" />
         <Folder Include="Zynarator\Audit\" />
         <Folder Include="Zynarator\Bean\" />
     </ItemGroup>
