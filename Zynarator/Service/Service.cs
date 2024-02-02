@@ -153,4 +153,9 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
         Specification.DefinePredicates();
         return await Specification.PaginatedSearch();
     }
+
+    public async Task<List<TEntity>> FindOptimized()
+    {
+        return await Repository.FindOptimized();
+    }
 }

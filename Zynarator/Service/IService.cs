@@ -26,4 +26,5 @@ public interface IService<TEntity, TCriteria>
     Task<List<TEntity>> FindByCriteria(TCriteria criteria);
 
     Task<List<TEntity>> FindPaginatedByCriteria(TCriteria criteria);
+    Task<List<TEntity>> FindOptimized();
 }

@@ -101,4 +101,10 @@ public abstract class BaseController<TEntity, TDto, TService, TCriteria> : Contr
         var found = await Service.FindPaginatedByCriteria(criteria);
         return ToDto(found);
     }
+
+    public virtual async Task<ActionResult<List<TDto?>>> FindOptimized()
+    {
+        var found = await Service.FindOptimized();
+        return ToDto(found);
+    }
 }

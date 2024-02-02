@@ -90,6 +90,12 @@ public class AcahtRest : BaseController<Achat, AchatDto, AchatService, AchatCrit
         return await base.FindPaginatedByCriteria(criteria);
     }
 
+    [HttpPost("/optimized")]
+    public override async Task<ActionResult<List<AchatDto?>>> FindOptimized()
+    {
+        return await base.FindOptimized();
+    }
+
     //---------------------------------------------------------------------------------------
     [HttpDelete("/client/{id:long}")]
     public async Task<ActionResult<int>> DeleteByClientId(long id)

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotnetGenerator.Zynarator.Repository;
 
-public class Repository<TEntity> : IRepository<TEntity> where TEntity : AuditBusinessObject
+public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : AuditBusinessObject
 {
     protected readonly AppDbContext Context;
     protected readonly IQueryable<TEntity> Table;
@@ -105,4 +105,11 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : AuditBus
             .Take(size)
             .ToListAsync();
     }
+
+    public async Task<List<TEntity>> FindOptimized()
+    {
+        return await IncludedTable.Select(e => Optimized(e)).ToListAsync();
+    }
+
+    protected abstract TEntity Optimized(TEntity e);
 }

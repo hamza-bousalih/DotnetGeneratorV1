@@ -4,7 +4,7 @@ using DotnetGenerator.Data;
 using DotnetGenerator.Zynarator.Repository;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotnetGenerator.Dao.Impl;
+namespace DotnetGenerator.Dao.Repository.Impl;
 
 public class AchatItemDaoImpl: Repository<AchatItem>, AchatItemDao
 {
@@ -23,6 +23,14 @@ public class AchatItemDaoImpl: Repository<AchatItem>, AchatItemDao
         return Table
             .Include(a => a.Produit)
             .Include(a => a.Achat);
+    }
+
+    protected override AchatItem Optimized(AchatItem e)
+    {
+        return new AchatItem
+        {
+            Id = e.Id
+        };
     }
 
     public async Task<int> DeleteByAchatId(long id)=>

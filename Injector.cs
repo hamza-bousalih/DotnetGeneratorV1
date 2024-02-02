@@ -2,7 +2,7 @@ using DotnetGenerator.Bean.Core;
 using DotnetGenerator.Dao.Criteria;
 using Lamar;
 using DotnetGenerator.Dao.Facade;
-using DotnetGenerator.Dao.Impl;
+using DotnetGenerator.Dao.Repository.Impl;
 using DotnetGenerator.Dao.Specification;
 using DotnetGenerator.Data;
 using DotnetGenerator.Service.Facade;

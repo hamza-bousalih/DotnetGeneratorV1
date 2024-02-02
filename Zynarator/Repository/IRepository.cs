@@ -9,6 +9,7 @@ public interface IRepository<TEntity> where TEntity : BusinessObject
     // Retrieve operations
     Task<TEntity?> FindById(long id);
     Task<List<TEntity>> FindAll();
+    Task<List<TEntity>> FindOptimized();
     Task<List<TEntity>> Filter(Expression<Func<TEntity, bool>> predicate);
 
     // Create operations
