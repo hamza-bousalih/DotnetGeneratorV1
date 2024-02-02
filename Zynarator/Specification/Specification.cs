@@ -38,6 +38,5 @@ public abstract class Specification<TEntity> where TEntity : BusinessObject
         if (Predicates.Count > 0) predicate = e => Predicates.TrueForAll(p => p.Invoke(e));
         var list = await Query.ToListAsync();
         return list.Where(e => predicate.Invoke(e)).ToList();
-        // return list;
     }
 }

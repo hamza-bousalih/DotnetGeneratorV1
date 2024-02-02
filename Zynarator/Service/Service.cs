@@ -151,6 +151,6 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     {
         Specification.Criteria = criteria;
         Specification.DefinePredicates();
-        return await Specification.Search();
+        return await Specification.PaginatedSearch();
     }
 }
