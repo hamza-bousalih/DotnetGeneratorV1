@@ -20,8 +20,8 @@ public abstract class SpecificationHelper<TEntity, TCriteria> : Specification<TE
     {
         var result = await Search();
 
-        var start = Math.Clamp(Criteria.Page * Criteria.MaxResults, 0, result.Count - 1);
-        var count = Math.Clamp(Criteria.MaxResults, 0, result.Count - start);
+        var start = Math.Clamp(Criteria.Page * Criteria.MaxResults, 0, result.Count);
+        var count = Math.Min(Criteria.MaxResults, result.Count - start);
 
         return new PaginatedList<TEntity>()
         {
@@ -29,6 +29,7 @@ public abstract class SpecificationHelper<TEntity, TCriteria> : Specification<TE
             DataSize = result.Count
         };
     }
+
 
     protected void AddPredicateId()
     {
