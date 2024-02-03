@@ -13,19 +13,20 @@ public class AppDbContext : DbContext
     public DbSet<Achat> Achats { get; init; }
     public DbSet<Client> Clients { get; init; }
     public DbSet<Produit> Produits { get; init; }
+
     public DbSet<AchatItem> AchatItems { get; init; }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Properties<decimal>().HaveColumnType("decimal(18,2)");
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.RegisterEntities();
     }
-    
+
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         ApplyEntityChanges();
@@ -36,7 +37,7 @@ public class AppDbContext : DbContext
     {
         var entries = ChangeTracker.Entries()
             .Where(e => e.State is EntityState.Added or EntityState.Modified);
-        foreach (var entry in entries) 
+        foreach (var entry in entries)
             entry.HandleAuditableEntities();
     }
 }

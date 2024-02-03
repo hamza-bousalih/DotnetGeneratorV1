@@ -26,15 +26,17 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
     protected virtual IQueryable<TEntity> SetIncluded() => Table;
 
-    protected void SetEntry<TProperty>(TProperty? property) where TProperty : BusinessObject
+    protected void SetUnchangedEntry<TProperty>(TProperty? property) where TProperty : BusinessObject
     {
-        if (property != null && property.Id != 0)
+        if (property is not null && property.Id != 0)
             Context.Entry(property).State = EntityState.Unchanged;
+        // else if (property is not null)
+        //     Context.Entry(property).State = EntityState.Detached;
     }
 
-    protected void SetEntry<TProperty>(IEnumerable<TProperty>? properties) where TProperty : BusinessObject
+    protected void SetUnchangedEntry<TProperty>(IEnumerable<TProperty>? properties) where TProperty : BusinessObject
     {
-        properties?.Each(SetEntry);
+        properties?.Each(SetUnchangedEntry);
     }
 
     protected async Task<int> DeleteIf(Expression<Func<TEntity, bool>> predicate) =>

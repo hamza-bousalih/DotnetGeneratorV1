@@ -48,7 +48,7 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
         var list = new List<TEntity>();
         foreach (var item in items)
         {
-            if (item.Id != 0 && await FindById(item.Id) != null)
+            if (await FindByReference(item) != null)
                 await Repository.Save(item);
             else list.Add(item);
         }
@@ -113,8 +113,10 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
         return items.Count;
     }
 
-    protected virtual async Task<TEntity?> FindByReference(TEntity t) =>
-        t.Id == 0 ? null : await FindById(t.Id);
+    protected virtual async Task<TEntity?> FindByReference(TEntity t)
+    {
+        return t.Id == 0 ? null : await FindById(t.Id);
+    }
 
     public async Task<TEntity?> FindWithAssociatedLists(long id)
     {
@@ -138,8 +140,8 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     protected virtual async Task FindOrSaveAssociatedObject(TEntity item)
     {
     }
-    
-    
+
+
     // specification
     public async Task<List<TEntity>> FindByCriteria(TCriteria criteria)
     {

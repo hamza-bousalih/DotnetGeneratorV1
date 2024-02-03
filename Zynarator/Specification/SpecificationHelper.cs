@@ -30,7 +30,6 @@ public abstract class SpecificationHelper<TEntity, TCriteria> : Specification<TE
         };
     }
 
-
     protected void AddPredicateId()
     {
         AddPredicateIf(Criteria.Id is not null && Criteria.Id != 0, e => e.Id.Equals(Criteria.Id));

@@ -14,8 +14,8 @@ public class AchatItemDaoImpl: Repository<AchatItem>, AchatItemDao
 
     protected override void SetContextEntry(AchatItem item)
     {
-        SetEntry(item.Produit);
-        SetEntry(item.Achat);
+        SetUnchangedEntry(item.Produit);
+        SetUnchangedEntry(item.Achat);
     }
 
     protected override IQueryable<AchatItem> SetIncluded()

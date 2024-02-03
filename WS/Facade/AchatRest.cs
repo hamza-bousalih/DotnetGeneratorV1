@@ -73,7 +73,7 @@ public class AcahtRest : BaseController<Achat, AchatDto, AchatService, AchatCrit
         return base.Delete(dto);
     }
 
-    [HttpDelete("multiple")]
+    [HttpPost("multiple")]
     public override Task<ActionResult<int>> Delete(List<AchatDto> dtos)
     {
         return base.Delete(dtos);
