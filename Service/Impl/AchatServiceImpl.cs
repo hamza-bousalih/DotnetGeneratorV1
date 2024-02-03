@@ -18,10 +18,9 @@ public class AchatServiceImpl: Service<Achat, AchatDao, AchatCriteria, AchatSpec
         _achatItemService = container.GetInstance<AchatItemService>();
     }
 
-    public override async Task<Achat> Create(Achat item)
+    protected override void NullifyEntities(Achat item)
     {
         if (item.Client!.Id == 0) item.Client = null;
-        return await base.Create(item);
     }
 
     protected override async Task<Achat?> FindByReference(Achat t)

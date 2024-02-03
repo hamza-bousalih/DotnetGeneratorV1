@@ -14,7 +14,7 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     where TSpecification : AbstractSpecification<TEntity, TCriteria>
 {
     protected TRepository Repository;
-    protected TSpecification Specification;
+    protected readonly TSpecification Specification;
 
     protected Type ItemClass;
     protected Type SpecificationClass;
@@ -141,7 +141,9 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     {
     }
 
-
+    protected virtual void NullifyEntities(TEntity item)
+    {
+    }
     // specification
     public async Task<List<TEntity>> FindByCriteria(TCriteria criteria)
     {
