@@ -1,5 +1,3 @@
-using DotnetGenerator.Bean.Core;
-using DotnetGenerator.Dao.Criteria;
 using Lamar;
 using DotnetGenerator.Dao.Facade;
 using DotnetGenerator.Dao.Repository.Impl;
@@ -7,12 +5,17 @@ using DotnetGenerator.Dao.Specification;
 using DotnetGenerator.Data;
 using DotnetGenerator.Service.Facade;
 using DotnetGenerator.Service.Impl;
-using DotnetGenerator.Zynarator.Specification;
 
 namespace DotnetGenerator;
 
 public static class Injector
 {
+
+    public static void Inject(this ServiceRegistry registry)
+    {
+        registry.InjectRepositories().InjectSpecifications().InjectServices().InjectLoader();
+    }
+    
     public static ServiceRegistry InjectServices(this ServiceRegistry registry)
     {
         // Inject the service here

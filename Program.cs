@@ -19,12 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(
 );
 
 // Add services to the container.
-builder.Host.UseLamar((_, registry) => registry
-    .InjectServices()
-    .InjectRepositories()
-    .InjectSpecifications()
-    .InjectLoader()
-);
+builder.Host.UseLamar((_, registry) => registry.Inject());
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
