@@ -1,5 +1,6 @@
 using DotnetGenerator.Zynarator.Bean;
 using DotnetGenerator.Zynarator.Criteria;
+using DotnetGenerator.Zynarator.Util;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotnetGenerator.Zynarator.Specification;
@@ -8,22 +9,26 @@ public abstract class SpecificationHelper<TEntity, TCriteria> : Specification<TE
     where TEntity : BusinessObject
     where TCriteria : BaseCriteria
 {
-    public TCriteria Criteria;
+    public required TCriteria Criteria;
     protected bool Distinct;
 
     protected SpecificationHelper(DbSet<TEntity> table) : base(table)
     {
     }
 
-    public async Task<List<TEntity>> PaginatedSearch()
+    public async Task<PaginatedList<TEntity>> PaginatedSearch()
     {
         var result = await Search();
-        var start = Criteria.Page * Criteria.MaxResults;
-        var count = Criteria.MaxResults;
-        return result.GetRange(count, start);
-    }
 
-    protected bool IdEquals(TEntity entity) => entity.Id == Criteria!.Id;
+        var start = Math.Clamp(Criteria.Page * Criteria.MaxResults, 0, result.Count - 1);
+        var count = Math.Clamp(Criteria.MaxResults, 0, result.Count - start);
+
+        return new PaginatedList<TEntity>()
+        {
+            List = result.GetRange(start, count),
+            DataSize = result.Count
+        };
+    }
 
     protected void AddPredicateId()
     {

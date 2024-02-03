@@ -2,7 +2,6 @@ using DotnetGenerator.Bean.Core;
 using DotnetGenerator.Dao.Criteria;
 using DotnetGenerator.Data;
 using DotnetGenerator.Zynarator.Specification;
-using JasperFx.Core;
 
 namespace DotnetGenerator.Dao.Specification;
 

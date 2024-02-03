@@ -2,6 +2,7 @@ using DotnetGenerator.Zynarator.Bean;
 using DotnetGenerator.Zynarator.Criteria;
 using DotnetGenerator.Zynarator.Repository;
 using DotnetGenerator.Zynarator.Specification;
+using DotnetGenerator.Zynarator.Util;
 using Lamar;
 
 namespace DotnetGenerator.Zynarator.Service;
@@ -147,11 +148,12 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
         return await Specification.Search();
     }
 
-    public async Task<List<TEntity>> FindPaginatedByCriteria(TCriteria criteria)
+    public async Task<PaginatedList<TEntity>> FindPaginatedByCriteria(TCriteria criteria)
     {
         Specification.Criteria = criteria;
         Specification.DefinePredicates();
-        return await Specification.PaginatedSearch();
+        var paginatedSearch = await Specification.PaginatedSearch();
+        return paginatedSearch;
     }
 
     public async Task<List<TEntity>> FindOptimized()

@@ -4,6 +4,7 @@ using DotnetGenerator.Dao.Criteria;
 using DotnetGenerator.Service.Facade;
 using DotnetGenerator.WS.Dto;
 using DotnetGenerator.Zynarator.Controller;
+using DotnetGenerator.Zynarator.Util;
 using Lamar;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,7 +86,7 @@ public class AcahtRest : BaseController<Achat, AchatDto, AchatService, AchatCrit
     }
 
     [HttpPost("find-paginated-by-criteria")]
-    public override async Task<ActionResult<List<AchatDto?>>> FindPaginatedByCriteria(AchatCriteria criteria)
+    public override async Task<ActionResult<PaginatedList<AchatDto?>>> FindPaginatedByCriteria(AchatCriteria criteria)
     {
         return await base.FindPaginatedByCriteria(criteria);
     }

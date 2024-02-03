@@ -3,6 +3,7 @@ using DotnetGenerator.Zynarator.Bean;
 using DotnetGenerator.Zynarator.Criteria;
 using DotnetGenerator.Zynarator.Dto;
 using DotnetGenerator.Zynarator.Service;
+using DotnetGenerator.Zynarator.Util;
 using Lamar;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -96,7 +97,7 @@ public abstract class BaseController<TEntity, TDto, TService, TCriteria> : Contr
         return ToDto(found);
     }
 
-    public virtual async Task<ActionResult<List<TDto?>>> FindPaginatedByCriteria(TCriteria criteria)
+    public virtual async Task<ActionResult<PaginatedList<TDto?>>> FindPaginatedByCriteria(TCriteria criteria)
     {
         var found = await Service.FindPaginatedByCriteria(criteria);
         return ToDto(found);

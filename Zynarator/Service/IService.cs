@@ -1,5 +1,6 @@
 using DotnetGenerator.Zynarator.Bean;
 using DotnetGenerator.Zynarator.Criteria;
+using DotnetGenerator.Zynarator.Util;
 
 namespace DotnetGenerator.Zynarator.Service;
 
@@ -25,6 +26,6 @@ public interface IService<TEntity, TCriteria>
 
     Task<List<TEntity>> FindByCriteria(TCriteria criteria);
 
-    Task<List<TEntity>> FindPaginatedByCriteria(TCriteria criteria);
+    Task<PaginatedList<TEntity>> FindPaginatedByCriteria(TCriteria criteria);
     Task<List<TEntity>> FindOptimized();
 }

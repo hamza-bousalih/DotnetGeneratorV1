@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DotnetGenerator.Zynarator.Bean;
 using DotnetGenerator.Zynarator.Dto;
+using DotnetGenerator.Zynarator.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetGenerator.Zynarator.Controller;
@@ -31,4 +32,13 @@ public abstract class ControllerConverter<TEntity, TDto> : ControllerBase
     }
 
     protected List<TDto?> ToDto(List<TEntity> items) => items.Select(ToDto).ToList(); 
+    
+    protected PaginatedList<TDto?> ToDto(PaginatedList<TEntity> paginatedList)
+    {
+        return new PaginatedList<TDto?>
+        {
+            List = ToDto(paginatedList.List),
+            DataSize = paginatedList.DataSize
+        };
+    }
 }
