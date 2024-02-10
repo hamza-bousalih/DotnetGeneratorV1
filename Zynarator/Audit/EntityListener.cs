@@ -1,4 +1,5 @@
 namespace DotnetGenerator.Zynarator.Audit;
+
 using System;
 using System.Linq;
 using System.Security.Claims;

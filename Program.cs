@@ -20,12 +20,13 @@ builder.Services.AddDbContext<AppDbContext>(
     );
 
 // Add services to the container.
-builder.Host.UseLamar((_, registry) => registry.InjectServices().InjectRepositories());
+builder.Host.UseLamar((_, registry) => registry.Inject());
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -33,19 +34,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy",
-        policyBuilder => policyBuilder
-            .AllowAnyMethod()
-            .AllowCredentials()
-            .WithOrigins("http://localhost:4200")
-            .AllowAnyHeader()
-            .WithExposedHeaders("Content-Disposition")
-            .SetPreflightMaxAge(TimeSpan.FromMinutes(5))
-            .Build());
-});
-
+builder.Services.ConfigCors();
 
 var app = builder.Build();
 
@@ -62,6 +51,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors("CorsPolicy");
+app.UseCors(CorsConfig.CorsName);
 
 app.Run();
