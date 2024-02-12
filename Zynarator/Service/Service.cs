@@ -39,8 +39,9 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     public virtual async Task<TEntity> Create(TEntity item)
     {
         var loaded = item.Id != 0 ? null : await FindByReferenceEntity(item);
-        if (loaded == null) return await Repository.Save(item);
-        return loaded;
+        if (loaded != null) return loaded;
+        NullifyEntities(item);
+        return await Repository.Save(item);
     }
 
     public virtual async Task<List<TEntity>> Create(List<TEntity> items)
@@ -49,7 +50,10 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
         foreach (var item in items)
         {
             if (await FindByReferenceEntity(item) != null)
+            {
+                NullifyEntities(item);
                 await Repository.Save(item);
+            }
             else list.Add(item);
         }
 
@@ -61,14 +65,16 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
         if (t == null) return t;
         await FindOrSaveAssociatedObject(t);
         var result = await FindByReferenceEntity(t);
-        if (result == null) return await Create(t);
-        return result;
+        if (result != null) return result;
+        NullifyEntities(t);
+        return await Create(t);
     }
 
     public virtual async Task<TEntity> Update(TEntity item)
     {
         var loadedItem = item.Id == 0 ? null : await Repository.FindById(item.Id);
         if (loadedItem == null) throw new Exception("errors.notFound");
+        NullifyEntities(item);
         await UpdateWithAssociatedLists(item);
         await Repository.Update(item);
         return loadedItem;
@@ -82,7 +88,11 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
             else
             {
                 var loadedItem = await FindById(item.Id);
-                if (createIfNotExist && (item.Id == 0 || loadedItem == null)) await Repository.Update(item);
+                if (createIfNotExist && (item.Id == 0 || loadedItem == null))
+                {
+                    NullifyEntities(item);
+                    await Repository.Update(item);
+                }
                 else if (item.Id != 0 && loadedItem != null) await Repository.Update(item);
                 else list.Add(item);
             }
@@ -141,6 +151,10 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     {
     }
     
+    protected virtual void NullifyEntities(TEntity item)
+    {
+    }
+
     // specification
     public async Task<List<TEntity>> FindByCriteria(TCriteria criteria)
     {

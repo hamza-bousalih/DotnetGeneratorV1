@@ -22,6 +22,10 @@ public class AchatServiceImpl: Service<Achat, AchatDao, AchatCriteria, AchatSpec
         return await Repository.DeleteByReference(t.Reference!);
     }
 
+    protected override void NullifyEntities(Achat item)
+    {
+        if (item.Client!.Id == 0) item.Client = null;
+    }
 
     public AchatServiceImpl(IContainer container) : base(container){
     }
