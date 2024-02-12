@@ -140,10 +140,7 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     protected virtual async Task FindOrSaveAssociatedObject(TEntity item)
     {
     }
-
-    protected virtual void NullifyEntities(TEntity item)
-    {
-    }
+    
     // specification
     public async Task<List<TEntity>> FindByCriteria(TCriteria criteria)
     {

@@ -28,20 +28,20 @@ public static class Injector
     public static ServiceRegistry InjectRepositories(this ServiceRegistry registry)
     {
         // Inject the repositories here
-        registry.For<ClientDao>().Use<ClientDaoImpl>().Transient();
-        registry.For<AchatDao>().Use<AchatDaoImpl>().Transient();
-        registry.For<AchatItemDao>().Use<AchatItemDaoImpl>().Transient();
-        registry.For<ProduitDao>().Use<ProduitDaoImpl>().Transient();
+        registry.For<ClientDao>().Use<ClientDaoImpl>().Scoped();
+        registry.For<AchatDao>().Use<AchatDaoImpl>().Scoped();
+        registry.For<AchatItemDao>().Use<AchatItemDaoImpl>().Scoped();
+        registry.For<ProduitDao>().Use<ProduitDaoImpl>().Scoped();
         return registry;
     }
 
     public static ServiceRegistry InjectSpecifications(this ServiceRegistry registry)
     {
         // Inject the specifications here
-        registry.For<ClientSpecification>().Use<ClientSpecification>().Transient();
-        registry.For<AchatSpecification>().Use<AchatSpecification>().Transient();
-        registry.For<AchatItemSpecification>().Use<AchatItemSpecification>().Transient();
-        registry.For<ProduitSpecification>().Use<ProduitSpecification>().Transient();
+        registry.For<ClientSpecification>().Use<ClientSpecification>().Scoped();
+        registry.For<AchatSpecification>().Use<AchatSpecification>().Scoped();
+        registry.For<AchatItemSpecification>().Use<AchatItemSpecification>().Scoped();
+        registry.For<ProduitSpecification>().Use<ProduitSpecification>().Scoped();
         return registry;
     }
 }

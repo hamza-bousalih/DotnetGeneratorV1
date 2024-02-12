@@ -8,7 +8,6 @@ public interface IService<TEntity, TCriteria>
     where TEntity : BusinessObject
     where TCriteria : BaseCriteria
 {
-    Task<TEntity?> FindByReferenceEntity(TEntity t);
     Task<TEntity?> FindById(long id);
     Task<List<TEntity>> FindAll();
     Task<List<TEntity>> FindPaginated(int page, int size);

@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddLamar();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-const string connectionString = "server=localhost;user=root;password=;database=stocky";
+const string connectionString = "server=localhost;user=root;password=;database=stocky1";
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseMySql(
         connectionString,

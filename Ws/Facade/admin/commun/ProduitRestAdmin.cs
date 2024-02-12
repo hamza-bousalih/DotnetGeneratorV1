@@ -30,13 +30,13 @@ public class ProduitRest :  BaseController<Produit, ProduitDto, ProduitService, 
     [HttpDelete("id/{id:long}")]
     public override Task<ActionResult<int>> DeleteById(long id) => base.DeleteById(id);
 
-    [HttpPost]
+    [HttpDelete]
     public override Task<ActionResult<int>> Delete(ProduitDto dto) => base.Delete(dto);
 
     [HttpPost("multiple")]
     public override Task<ActionResult<int>> Delete(List<ProduitDto> dtos) => base.Delete(dtos);
 
-    [HttpPost("optimized")]
+    [HttpGet("optimized")]
     public override async Task<ActionResult<List<ProduitDto?>>> FindOptimized() {
         return await base.FindOptimized();
     }

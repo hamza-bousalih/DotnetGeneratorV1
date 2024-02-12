@@ -30,13 +30,13 @@ public class ClientRest :  BaseController<Client, ClientDto, ClientService, Clie
     [HttpDelete("id/{id:long}")]
     public override Task<ActionResult<int>> DeleteById(long id) => base.DeleteById(id);
 
-    [HttpPost]
+    [HttpDelete]
     public override Task<ActionResult<int>> Delete(ClientDto dto) => base.Delete(dto);
 
     [HttpPost("multiple")]
     public override Task<ActionResult<int>> Delete(List<ClientDto> dtos) => base.Delete(dtos);
 
-    [HttpPost("optimized")]
+    [HttpGet("optimized")]
     public override async Task<ActionResult<List<ClientDto?>>> FindOptimized() {
         return await base.FindOptimized();
     }
