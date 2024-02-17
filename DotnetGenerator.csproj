@@ -8,6 +8,8 @@
 
     <ItemGroup>
         <PackageReference Include="Lamar.Microsoft.DependencyInjection" Version="13.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.15" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.15" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.14" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
@@ -30,7 +32,7 @@
         <Folder Include="WS\Converter\" />
         <Folder Include="Zynarator\Audit\" />
         <Folder Include="Zynarator\Bean\" />
-        <Folder Include="Zynarator\Security\Bean\" />
+        <Folder Include="Zynarator\Security\Service\" />
     </ItemGroup>
 
 </Project>

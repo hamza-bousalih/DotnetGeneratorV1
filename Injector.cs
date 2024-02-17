@@ -4,6 +4,7 @@ using DotnetGenerator.Dao.Impl;
 using DotnetGenerator.Service.Facade;
 using DotnetGenerator.Service.Impl;
 using DotnetGenerator.Dao.Specification;
+using DotnetGenerator.Zynarator.Security;
 
 namespace DotnetGenerator;
 
@@ -12,7 +13,7 @@ public static class Injector
 
     public static void Inject(this ServiceRegistry registry)
     {
-        registry.InjectRepositories().InjectSpecifications().InjectServices();
+        registry.InjectRepositories().InjectSpecifications().InjectServices().InjectForSecurity();
     }
 
     public static ServiceRegistry InjectServices(this ServiceRegistry registry)
