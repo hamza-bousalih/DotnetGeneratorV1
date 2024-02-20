@@ -4,11 +4,12 @@ using DotnetGenerator.Zynarator.Security.Common;
 using DotnetGenerator.Zynarator.Security.Jwt;
 using DotnetGenerator.Zynarator.Security.Payload.Request;
 using DotnetGenerator.Zynarator.Security.Payload.Response;
-using JasperFx.Core;
+using DotnetGenerator.Zynarator.Security.Service.Facade;
+using Lamar;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
+namespace DotnetGenerator.Zynarator.Security.Ws;
 
 [Route("/")]
 [ApiController]
@@ -16,11 +17,13 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<Role> _roleManager;
+    private readonly UserService _userService;
 
-    public AuthController(UserManager<User> userManager, RoleManager<Role> roleManager)
+    public AuthController(UserManager<User> userManager, RoleManager<Role> roleManager, IContainer container)
     {
         _userManager = userManager;
         _roleManager = roleManager;
+        _userService = container.GetInstance<UserService>();
     }
 
     [HttpPost]
@@ -47,24 +50,18 @@ public class AuthController : ControllerBase
         {
             UserName = signupRequest.Username,
             Email = signupRequest.Email,
+            RoleUsers = signupRequest.Roles.Select(r => new RoleUser() {Role = new Role(r)}).ToList(),
             SecurityStamp = Guid.NewGuid().ToString(),
+            Password = signupRequest.Password
         };
+        
+        if (user.RoleUsers.Count == 0) 
+            user.RoleUsers.Add(new RoleUser {Role = new Role(AuthoritiesConstants.User)});
 
-        var createResult = await _userManager.CreateAsync(user, signupRequest.Password);
+        await _userService.Create(user);
 
-        if (!createResult.Succeeded)
-        {
-            var err = createResult.Errors.Aggregate("Failed to create user: ",
-                (current, error) => current + $"# {error}");
-            return BadRequest(err);
-        }
-
-        // add the roles
-        if (signupRequest.Roles.Count == 0) signupRequest.Roles.Add(AuthoritiesConstants.User);
-        foreach (var userRole in signupRequest.Roles)
-        {
-            await _userManager.AddToRoleAsync(user, userRole);
-        }
+        foreach (var userRole in user.RoleUsers) 
+            await _userManager.AddToRoleAsync(user, userRole.Role!.Name!);
 
         return Ok("new user created!");
     }
@@ -73,13 +70,13 @@ public class AuthController : ControllerBase
     [Route("login")]
     public async Task<ActionResult> Login([FromBody] LoginRequest login)
     {
-        var user = await _userManager.FindByNameAsync(login.Username);
+        var user = await _userService.FindByUsername(login.Username);
         if (user is null) return Unauthorized("Invalid Credentials!");
 
-        var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, login.Password);
+        var isPasswordCorrect = await _userService.CheckPassword(user, login.Password);
         if (!isPasswordCorrect) return Unauthorized("Invalid Credentials!");
 
-        user.Roles = (await _userManager.GetRolesAsync(user)).Map(e => new Role(e)).ToHashSet();
+        // user.RoleUsers = (await _userManager.GetRolesAsync(user)).Map(e => new RoleUser(user, new Role(e))).ToList();
 
         var claims = new List<Claim>
         {
@@ -87,7 +84,10 @@ public class AuthController : ControllerBase
             new("id", user.Id.ToString()),
             new("JWTID", Guid.NewGuid().ToString()),
         };
-        claims.AddRange(user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name!)));
+
+        claims.AddRange(user.RoleUsers is null
+            ? new List<Claim>()
+            : user.RoleUsers.Select(roleUser => new Claim("roles", roleUser.Role?.Name!)));
 
         var token = JwtUtils.GenerateToken(claims);
 
@@ -95,7 +95,7 @@ public class AuthController : ControllerBase
             {
                 Id = user.Id.ToString(),
                 Email = user.Email,
-                Roles = user.Roles.Select(role => role.Name!).ToHashSet(),
+                Roles = user.RoleUsers?.Select(roleUser => roleUser.Role?.Name!).ToHashSet(),
                 Token = token,
                 Username = user.UserName,
             }

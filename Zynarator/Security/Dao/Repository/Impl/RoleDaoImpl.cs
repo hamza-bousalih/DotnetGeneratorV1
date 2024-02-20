@@ -1,30 +1,28 @@
-
 using DotnetGenerator.Data;
 using DotnetGenerator.Zynarator.Repository;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Dao.Repository.Facade;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotnetGenerator.Dao.Impl;
+namespace DotnetGenerator.Zynarator.Security.Dao.Repository.Impl;
 
 public class RoleDaoImpl : Repository<Role>, RoleDao
 {
-    public async Task<Role?> FindByAuthority(String authority)
+    private readonly RoleManager<Role> _roleManager;
+    
+    public RoleDaoImpl(AppDbContext context, RoleManager<Role> roleManager) : base(context, context.Roles)
     {
-        return await FindIf(el => el.Authority == authority);
+        _roleManager = roleManager;
     }
 
-    public async Task<int> DeleteByAuthority(String authority)
+    public async Task<Role?> FindByAuthority(string authority)
     {
-        return await DeleteIf(el => el.Authority == authority);
+        return await Table.FirstOrDefaultAsync(r => r.Authority == authority);
     }
 
-    public new async Task<List<Role>> FindOptimized()
+    public async Task<int> DeleteByAuthority(string authority)
     {
-        return await IncludedTable.Select(e => new Role { Id = e.Id, Authority = e.Authority }).ToListAsync();
-    }
-
-    public RoleDaoImpl(AppDbContext context) : base(context, context.Roles)
-    {
+        return await Table.Where(r => r.Authority == authority).ExecuteDeleteAsync();
     }
 }

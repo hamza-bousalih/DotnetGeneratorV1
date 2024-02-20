@@ -10,7 +10,7 @@ namespace DotnetGenerator.Zynarator.Security.Service.Impl;
 
 public class RoleServiceImpl : Service<Role, RoleDao, RoleCriteria, RoleSpecification>, RoleService
 {
-    public async Task<Role?> FindByReferenceEntity(Role t)
+    public new async Task<Role?> FindByReferenceEntity(Role t)
     {
         return await Repository.FindByAuthority(t.Authority!);
     }
@@ -20,8 +20,17 @@ public class RoleServiceImpl : Service<Role, RoleDao, RoleCriteria, RoleSpecific
         return await Repository.DeleteByAuthority(t.Authority!);
     }
 
-
     public RoleServiceImpl(IContainer container) : base(container)
     {
+    }
+
+    public async Task<Role?> FindByAuthority(string authority)
+    {
+        return await Repository.FindByAuthority(authority);
+    }
+
+    public async Task<int> DeleteByAuthority(string authority)
+    {
+        return await Repository.DeleteByAuthority(authority);
     }
 }

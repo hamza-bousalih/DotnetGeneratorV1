@@ -8,10 +8,10 @@ using Lamar;
 namespace DotnetGenerator.Zynarator.Service;
 
 public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> : IService<TEntity, TCriteria>
-    where TEntity : BusinessObject
+    where TEntity : IBusinessObject
     where TRepository : IRepository<TEntity>
     where TCriteria : BaseCriteria
-    where TSpecification : AbstractSpecification<TEntity, TCriteria>
+    where TSpecification : SpecificationHelper<TEntity, TCriteria>
 {
     protected TRepository Repository;
     protected readonly TSpecification Specification;
@@ -28,17 +28,14 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     }
 
     public virtual async Task<TEntity?> FindById(long id) =>
-        await Repository.FindById(id) ?? null;
+        await Repository.FindById(id) ?? default;
 
     public virtual async Task<List<TEntity>> FindAll() =>
         await Repository.FindAll();
-
-    public virtual async Task<List<TEntity>> FindPaginated(int page, int size) =>
-        await Repository.FindPaginated(page, size);
-
+    
     public virtual async Task<TEntity> Create(TEntity item)
     {
-        var loaded = item.Id != 0 ? null : await FindByReferenceEntity(item);
+        var loaded = item.Id != 0 ? default : await FindByReferenceEntity(item);
         if (loaded != null) return loaded;
         NullifyEntities(item);
         return await Repository.Save(item);
@@ -72,7 +69,7 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
 
     public virtual async Task<TEntity> Update(TEntity item)
     {
-        var loadedItem = item.Id == 0 ? null : await Repository.FindById(item.Id);
+        var loadedItem = item.Id == 0 ? default : await Repository.FindById(item.Id);
         if (loadedItem == null) throw new Exception("errors.notFound");
         NullifyEntities(item);
         await UpdateWithAssociatedLists(item);
@@ -125,7 +122,7 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
 
     protected virtual async Task<TEntity?> FindByReferenceEntity(TEntity t)
     {
-        return t.Id == 0 ? null : await FindById(t.Id);
+        return t.Id == 0 ? default : await FindById(t.Id);
     }
 
     public async Task<TEntity?> FindWithAssociatedLists(long id)
@@ -150,7 +147,7 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
     protected virtual async Task FindOrSaveAssociatedObject(TEntity item)
     {
     }
-    
+
     protected virtual void NullifyEntities(TEntity item)
     {
     }

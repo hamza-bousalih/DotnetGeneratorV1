@@ -8,7 +8,6 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        
         // client mapper
         CreateMap<ClientDto, Client>();
         CreateMap<Client, ClientDto>();
@@ -16,11 +15,11 @@ public class AutoMapperProfile : Profile
         CreateMap<AchatDto, Achat>()
             .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client))
             .ForMember(dest => dest.AchatItems, opt => opt.MapFrom(src => src.AchatItems))
-                ;
+            ;
         CreateMap<Achat, AchatDto>()
             .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client))
             .ForMember(dest => dest.AchatItems, opt => opt.MapFrom(src => src.AchatItems))
-        ;
+            ;
 
         // achatItem mapper
         CreateMap<AchatItemDto, AchatItem>();
@@ -31,4 +30,3 @@ public class AutoMapperProfile : Profile
         CreateMap<Produit, ProduitDto>();
     }
 }
-

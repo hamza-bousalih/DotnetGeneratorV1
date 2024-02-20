@@ -2,7 +2,7 @@ using DotnetGenerator.Zynarator.Criteria;
 
 namespace DotnetGenerator.Dao.Criteria;
 
-public class ProduitCriteria: BaseCriteria
+public class ProduitCriteria : BaseCriteria
 {
     public string? Reference { get; set; }
     public string? ReferenceLike { get; set; }
@@ -21,5 +21,4 @@ public class ProduitCriteria: BaseCriteria
     public string? SeuilAlert { get; set; }
     public string? SeuilAlertMin { get; set; }
     public string? SeuilAlertMax { get; set; }
-
 }

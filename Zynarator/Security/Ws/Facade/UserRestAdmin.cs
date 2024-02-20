@@ -2,15 +2,18 @@ using AutoMapper;
 using DotnetGenerator.Zynarator.Controller;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Dao.Criteria;
+using DotnetGenerator.Zynarator.Security.Payload.Request;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
 using DotnetGenerator.Zynarator.Security.Ws.Dto;
 using DotnetGenerator.Zynarator.Util;
 using Lamar;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
 [Route("api/admin/user/")]
+[Authorize]
 [ApiController]
 public class UserRest : BaseController<User, UserDto, UserService, UserCriteria>
 {
@@ -51,6 +54,23 @@ public class UserRest : BaseController<User, UserDto, UserService, UserCriteria>
     public override async Task<ActionResult<PaginatedList<UserDto?>>> FindPaginatedByCriteria(UserCriteria criteria)
     {
         return await base.FindPaginatedByCriteria(criteria);
+    }
+
+    [HttpGet("/user/{username}")]
+    public Task<User?> FindByUsername(string username)
+    {
+        return Service.FindByUsername(username);
+    }
+
+    [HttpDelete("/user/{username}")]
+    public Task<int> DeleteByUsername(string username)
+    {
+        return Service.DeleteByUsername(username);
+    }
+    
+    [HttpPost("/changePassword")]
+    public async Task<bool> ChangePassword(ChangePasswordRequest changePasswordRequest) {
+        return await Service.ChangePassword(changePasswordRequest.Username, changePasswordRequest.Password);
     }
 
     public UserRest(IContainer container, IMapper mapper) : base(container, mapper)

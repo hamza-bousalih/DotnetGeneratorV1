@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 namespace DotnetGenerator.Zynarator.Specification;
 
 public abstract class SpecificationHelper<TEntity, TCriteria> : Specification<TEntity>
-    where TEntity : BusinessObject
+    where TEntity : IBusinessObject
     where TCriteria : BaseCriteria
 {
     public required TCriteria Criteria;
     protected bool Distinct;
-
-    protected SpecificationHelper(DbSet<TEntity> table) : base(table)
+    
+    protected SpecificationHelper(IQueryable<TEntity> query) : base(query)
     {
     }
 
@@ -38,4 +38,6 @@ public abstract class SpecificationHelper<TEntity, TCriteria> : Specification<TE
         AddPredicateIf(Criteria.IdsNotIn is not null && Criteria.IdsNotIn?.Count > 0,
             e => e.Id.NotIn(Criteria.IdsNotIn));
     }
+
+    public abstract void DefinePredicates();
 }

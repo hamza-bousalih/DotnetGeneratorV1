@@ -33,6 +33,6 @@ public class ModelPermissionUserSpecification : AbstractSpecification<ModelPermi
             e => e.ModelPermission!.Reference == Criteria.ModelPermission!.Reference);
         AddPredicateIf(Criteria.User is not null, e => e.User!.Id == Criteria.User!.Id);
         AddPredicateIf(Criteria.Users is not null, e => e.User!.Id.In(Criteria.Users!.Ids()));
-        AddPredicateIf(Criteria.User is not null, e => e.User!.Username == Criteria.User!.Username);
+        AddPredicateIf(Criteria.User is not null, e => e.User!.UserName == Criteria.User!.Username);
     }
 }

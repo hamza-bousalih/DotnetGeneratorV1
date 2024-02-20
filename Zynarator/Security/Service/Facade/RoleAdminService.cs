@@ -6,4 +6,6 @@ namespace DotnetGenerator.Zynarator.Security.Service.Facade;
 
 public interface RoleService : IService<Role, RoleCriteria>
 {
+    Task<Role?> FindByAuthority(string authority);
+    Task<int> DeleteByAuthority(string authority);
 }

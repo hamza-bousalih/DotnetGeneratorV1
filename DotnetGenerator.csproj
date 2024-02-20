@@ -31,7 +31,6 @@
         
         <Folder Include="WS\Converter\" />
         <Folder Include="Zynarator\Audit\" />
-        <Folder Include="Zynarator\Bean\" />
         <Folder Include="Zynarator\Security\Service\" />
     </ItemGroup>
 

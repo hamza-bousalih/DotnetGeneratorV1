@@ -12,18 +12,17 @@ public class ActionPermissionServiceImpl :
     Service<ActionPermission, ActionPermissionDao, ActionPermissionCriteria, ActionPermissionSpecification>,
     ActionPermissionService
 {
-    public async Task<ActionPermission?> FindByReferenceEntity(ActionPermission t)
-    {
-        return await Repository.FindByReference(t.Reference!);
-    }
-
-    public async Task<int> DeleteByReferenceEntity(ActionPermission t)
-    {
-        return await Repository.DeleteByReference(t.Reference!);
-    }
-
-
     public ActionPermissionServiceImpl(IContainer container) : base(container)
     {
+    }
+
+    public async Task<ActionPermission?> FindByReference(string reference)
+    {
+        return await Repository.FindByReference(reference);
+    }
+
+    public async Task<int> DeleteByReference(string reference)
+    {
+        return await Repository.DeleteByReference(reference);
     }
 }

@@ -13,7 +13,7 @@ public abstract class AuditBusinessObject : BusinessObject
 
     [DataType(DataType.DateTime)] public DateTime? UpdatedOn { get; set; }
 
-    [StringLength(255)] public string CreatedBy { get; set; }
+    [StringLength(255)] public string CreatedBy { get; set; } = "";
 
     [StringLength(255)] public string? UpdatedBy { get; set; }
 

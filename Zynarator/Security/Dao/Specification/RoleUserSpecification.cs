@@ -18,7 +18,7 @@ public class RoleUserSpecification : AbstractSpecification<RoleUser, RoleUserCri
 
         AddPredicateIf(Criteria.User is not null, e => e.User!.Id == Criteria.User!.Id);
         AddPredicateIf(Criteria.Users is not null, e => e.User!.Id.In(Criteria.Users!.Ids()));
-        AddPredicateIf(Criteria.User is not null, e => e.User!.Username == Criteria.User!.Username);
+        AddPredicateIf(Criteria.User is not null, e => e.User!.UserName == Criteria.User!.Username);
         AddPredicateIf(Criteria.Role is not null, e => e.Role!.Id == Criteria.Role!.Id);
         AddPredicateIf(Criteria.Roles is not null, e => e.Role!.Id.In(Criteria.Roles!.Ids()));
         AddPredicateIf(Criteria.Role is not null, e => e.Role!.Authority == Criteria.Role!.Authority);

@@ -4,7 +4,7 @@ public static class CorsConfig
 {
     public const string CorsName = "CorsPolicy";
     private const string Origin = "http://localhost:4200";
-    
+
     public static void ConfigCors(this IServiceCollection services)
     {
         services.AddCors(options =>

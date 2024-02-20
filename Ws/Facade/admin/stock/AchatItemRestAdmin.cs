@@ -12,14 +12,13 @@ namespace DotnetGenerator.WS.Facade;
 
 [Route("api/admin/achatItem/")]
 [ApiController]
-public class AchatItemRest :  BaseController<AchatItem, AchatItemDto, AchatItemService, AchatItemCriteria>
+public class AchatItemRest : BaseController<AchatItem, AchatItemDto, AchatItemService, AchatItemCriteria>
 {
-
     [HttpGet("id/{id:long}")]
-    public override Task <ActionResult<AchatItemDto>> FindById(long id) => base.FindById(id);
+    public override Task<ActionResult<AchatItemDto>> FindById(long id) => base.FindById(id);
 
     [HttpGet]
-    public override Task <ActionResult<List<AchatItemDto>>> FindAll() => base.FindAll();
+    public override Task<ActionResult<List<AchatItemDto>>> FindAll() => base.FindAll();
 
     [HttpPost]
     public override Task<ActionResult<AchatItemDto>> Create(AchatItemDto dto) => base.Create(dto);
@@ -37,20 +36,25 @@ public class AchatItemRest :  BaseController<AchatItem, AchatItemDto, AchatItemS
     public override Task<ActionResult<int>> Delete(List<AchatItemDto> dtos) => base.Delete(dtos);
 
     [HttpGet("optimized")]
-    public override async Task<ActionResult<List<AchatItemDto?>>> FindOptimized() {
+    public override async Task<ActionResult<List<AchatItemDto?>>> FindOptimized()
+    {
         return await base.FindOptimized();
     }
 
     [HttpPost("find-by-criteria")]
-    public override async Task<ActionResult<List<AchatItemDto?>>> FindByCriteria(AchatItemCriteria criteria) {
+    public override async Task<ActionResult<List<AchatItemDto?>>> FindByCriteria(AchatItemCriteria criteria)
+    {
         return await base.FindByCriteria(criteria);
     }
 
     [HttpPost("find-paginated-by-criteria")]
-    public override async Task<ActionResult<PaginatedList<AchatItemDto?>>> FindPaginatedByCriteria(AchatItemCriteria criteria) {
+    public override async Task<ActionResult<PaginatedList<AchatItemDto?>>> FindPaginatedByCriteria(
+        AchatItemCriteria criteria)
+    {
         return await base.FindPaginatedByCriteria(criteria);
     }
 
-    public AchatItemRest(IContainer container, IMapper mapper): base(container, mapper) {
+    public AchatItemRest(IContainer container, IMapper mapper) : base(container, mapper)
+    {
     }
 }

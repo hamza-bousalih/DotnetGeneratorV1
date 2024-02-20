@@ -1,6 +1,6 @@
 namespace DotnetGenerator.Zynarator.Bean;
 
-public abstract class BusinessObject
+public abstract class BusinessObject : IBusinessObject
 {
     public long Id { get; set; }
 

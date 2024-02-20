@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DotnetGenerator.Zynarator.Controller;
 
 public abstract class ControllerConverter<TEntity, TDto> : ControllerBase
-    where TEntity : BusinessObject
+    where TEntity : IBusinessObject
     where TDto : BaseDto
 {
     private readonly IMapper _mapper;
@@ -18,7 +18,7 @@ public abstract class ControllerConverter<TEntity, TDto> : ControllerBase
     private TEntity ConvertToItem(TDto dto) => _mapper.Map<TEntity>(dto);
 
     protected TDto? ToDto(TEntity? item) => item == null ? null : ConvertToDto(item);
-    protected TEntity? ToItem(TDto? dto) => dto == null ? null : ConvertToItem(dto);
+    protected TEntity? ToItem(TDto? dto) => dto == null ? default : ConvertToItem(dto);
 
     protected List<TEntity> ToItem(List<TDto> dtos)
     {

@@ -1,5 +1,4 @@
-﻿
-using DotnetGenerator.Zynarator.Audit;
+﻿using DotnetGenerator.Zynarator.Audit;
 
 namespace DotnetGenerator.Zynarator.Security.Bean;
 

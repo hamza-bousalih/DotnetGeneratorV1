@@ -2,7 +2,7 @@ using DotnetGenerator.Zynarator.Criteria;
 
 namespace DotnetGenerator.Dao.Criteria;
 
-public class ClientCriteria: BaseCriteria
+public class ClientCriteria : BaseCriteria
 {
     public string? Cin { get; set; }
     public string? CinLike { get; set; }
@@ -19,5 +19,4 @@ public class ClientCriteria: BaseCriteria
     public string? Creance { get; set; }
     public string? CreanceMin { get; set; }
     public string? CreanceMax { get; set; }
-
 }

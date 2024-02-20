@@ -3,12 +3,8 @@ using DotnetGenerator.Zynarator.Repository;
 
 namespace DotnetGenerator.Dao.Facade;
 
-public interface ClientDao : IRepository<Client> {
-
-    Task<Client?> FindByCin(String cin);
-    Task<int>  DeleteByCin(String cin);
-
-
-
-
+public interface ClientDao : IRepository<Client>
+{
+    Task<Client?> FindByCin(string cin);
+    Task<int> DeleteByCin(string cin);
 }

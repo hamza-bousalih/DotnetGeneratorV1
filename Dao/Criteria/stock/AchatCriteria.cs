@@ -2,7 +2,7 @@ using DotnetGenerator.Zynarator.Criteria;
 
 namespace DotnetGenerator.Dao.Criteria;
 
-public class AchatCriteria: BaseCriteria
+public class AchatCriteria : BaseCriteria
 {
     public string? Reference { get; set; }
     public string? ReferenceLike { get; set; }
@@ -18,6 +18,6 @@ public class AchatCriteria: BaseCriteria
     public string? Description { get; set; }
     public string? DescriptionLike { get; set; }
 
-    public ClientCriteria? Client  { get; set; }
-    public List<ClientCriteria>? Clients  { get; set; }
+    public ClientCriteria? Client { get; set; }
+    public List<ClientCriteria>? Clients { get; set; }
 }

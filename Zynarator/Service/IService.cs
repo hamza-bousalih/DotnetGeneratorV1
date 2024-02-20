@@ -5,12 +5,11 @@ using DotnetGenerator.Zynarator.Util;
 namespace DotnetGenerator.Zynarator.Service;
 
 public interface IService<TEntity, TCriteria>
-    where TEntity : BusinessObject
+    where TEntity : IBusinessObject
     where TCriteria : BaseCriteria
 {
     Task<TEntity?> FindById(long id);
     Task<List<TEntity>> FindAll();
-    Task<List<TEntity>> FindPaginated(int page, int size);
 
     Task<TEntity> Create(TEntity item);
     Task<List<TEntity>> Create(List<TEntity> items);

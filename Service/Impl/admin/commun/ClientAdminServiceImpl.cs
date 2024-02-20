@@ -8,21 +8,20 @@ using Lamar;
 
 namespace DotnetGenerator.Service.Impl;
 
-
-public class ClientServiceImpl: Service<Client, ClientDao, ClientCriteria, ClientSpecification>, ClientService{
-
-
-
-    public async Task<Client?> FindByReferenceEntity(Client t){
+public class ClientServiceImpl : Service<Client, ClientDao, ClientCriteria, ClientSpecification>, ClientService
+{
+    public new async Task<Client?> FindByReferenceEntity(Client t)
+    {
         return await Repository.FindByCin(t.Cin!);
     }
-    public async Task<int> DeleteByReferenceEntity(Client t){
+
+    public async Task<int> DeleteByReferenceEntity(Client t)
+    {
         return await Repository.DeleteByCin(t.Cin!);
     }
 
 
-    public ClientServiceImpl(IContainer container) : base(container){
+    public ClientServiceImpl(IContainer container) : base(container)
+    {
     }
-
 }
-

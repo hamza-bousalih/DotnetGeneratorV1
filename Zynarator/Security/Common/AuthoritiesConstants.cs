@@ -3,5 +3,5 @@
 public interface AuthoritiesConstants
 {
     const string User = "USER";
-    const string Admin = "Admin";
+    const string Admin = "ADMIN";
 }

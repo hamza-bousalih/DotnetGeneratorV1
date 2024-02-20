@@ -12,7 +12,7 @@ public class ModelPermissionServiceImpl :
     Service<ModelPermission, ModelPermissionDao, ModelPermissionCriteria, ModelPermissionSpecification>,
     ModelPermissionService
 {
-    public async Task<ModelPermission?> FindByReferenceEntity(ModelPermission t)
+    public new async Task<ModelPermission?> FindByReferenceEntity(ModelPermission t)
     {
         return await Repository.FindByReference(t.Reference!);
     }
@@ -21,7 +21,6 @@ public class ModelPermissionServiceImpl :
     {
         return await Repository.DeleteByReference(t.Reference!);
     }
-
 
     public ModelPermissionServiceImpl(IContainer container) : base(container)
     {

@@ -14,4 +14,24 @@ public class RoleUserServiceImpl : Service<RoleUser, RoleUserDao, RoleUserCriter
     public RoleUserServiceImpl(IContainer container) : base(container)
     {
     }
+
+    public async Task<List<RoleUser>?> FindByUserId(long id)
+    {
+        return await Repository.FindByUserId(id);
+    }
+
+    public async Task<int> DeleteByUserId(long id)
+    {
+        return await Repository.DeleteByUserId(id);
+    }
+
+    public async Task<List<RoleUser>?> FindByRoleId(long id)
+    {
+        return await Repository.FindByRoleId(id);
+    }
+
+    public async Task<int> DeleteByRoleId(long id)
+    {
+        return await Repository.DeleteByRoleId(id);
+    }
 }

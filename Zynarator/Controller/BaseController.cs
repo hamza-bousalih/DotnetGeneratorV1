@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace DotnetGenerator.Zynarator.Controller;
 
 public abstract class BaseController<TEntity, TDto, TService, TCriteria> : ControllerConverter<TEntity, TDto>
-    where TEntity : BusinessObject
+    where TEntity : IBusinessObject
     where TDto : BaseDto
     where TCriteria : BaseCriteria
     where TService : IService<TEntity, TCriteria>

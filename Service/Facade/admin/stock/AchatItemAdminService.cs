@@ -4,11 +4,9 @@ using DotnetGenerator.Dao.Criteria;
 
 namespace DotnetGenerator.Service.Facade;
 
-public interface AchatItemService: IService<AchatItem, AchatItemCriteria>{
-
+public interface AchatItemService : IService<AchatItem, AchatItemCriteria>
+{
     Task<List<AchatItem>?> FindByAchatId(long id);
 
     Task<int> DeleteByAchatId(long id);
-
 }
-

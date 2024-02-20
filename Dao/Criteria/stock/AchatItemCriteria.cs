@@ -2,7 +2,7 @@ using DotnetGenerator.Zynarator.Criteria;
 
 namespace DotnetGenerator.Dao.Criteria;
 
-public class AchatItemCriteria: BaseCriteria
+public class AchatItemCriteria : BaseCriteria
 {
     public string? PrixUnitaire { get; set; }
     public string? PrixUnitaireMin { get; set; }
@@ -20,8 +20,8 @@ public class AchatItemCriteria: BaseCriteria
     public string? RemiseMin { get; set; }
     public string? RemiseMax { get; set; }
 
-    public ProduitCriteria? Produit  { get; set; }
-    public List<ProduitCriteria>? Produits  { get; set; }
-    public AchatCriteria? Achat  { get; set; }
-    public List<AchatCriteria>? Achats  { get; set; }
+    public ProduitCriteria? Produit { get; set; }
+    public List<ProduitCriteria>? Produits { get; set; }
+    public AchatCriteria? Achat { get; set; }
+    public List<AchatCriteria>? Achats { get; set; }
 }

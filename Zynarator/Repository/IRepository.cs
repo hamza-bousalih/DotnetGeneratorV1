@@ -1,16 +1,13 @@
-using System.Linq.Expressions;
-using DotnetGenerator.Zynarator.Audit;
 using DotnetGenerator.Zynarator.Bean;
 
 namespace DotnetGenerator.Zynarator.Repository;
 
-public interface IRepository<TEntity> where TEntity : BusinessObject
+public interface IRepository<TEntity> where TEntity : IBusinessObject
 {
     // Retrieve operations
     Task<TEntity?> FindById(long id);
     Task<List<TEntity>> FindAll();
     Task<List<TEntity>> FindOptimized();
-    Task<List<TEntity>> Filter(Expression<Func<TEntity, bool>> predicate);
 
     // Create operations
     Task<TEntity> Save(TEntity entity);
@@ -27,7 +24,4 @@ public interface IRepository<TEntity> where TEntity : BusinessObject
 
     // Count operations
     Task<int> Count();
-
-    // Pagination
-    Task<List<TEntity>> FindPaginated(int page, int size);
 }

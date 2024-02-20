@@ -4,8 +4,6 @@ using DotnetGenerator.Dao.Criteria;
 
 namespace DotnetGenerator.Service.Facade;
 
-public interface ProduitService: IService<Produit, ProduitCriteria>{
-
-
+public interface ProduitService : IService<Produit, ProduitCriteria>
+{
 }
-

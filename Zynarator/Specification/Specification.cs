@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotnetGenerator.Zynarator.Specification;
 
-public abstract class Specification<TEntity> where TEntity : BusinessObject
+public abstract class Specification<TEntity> where TEntity : IBusinessObject
 {
     protected IQueryable<TEntity> Query;
 
     protected List<Func<TEntity, bool>> Predicates = new();
 
-    protected Specification(DbSet<TEntity> table)
+    protected Specification(IQueryable<TEntity> query)
     {
-        Query = table.AsQueryable();
+        Query = query;
         Config();
     }
 
@@ -34,7 +34,7 @@ public abstract class Specification<TEntity> where TEntity : BusinessObject
 
     public async Task<List<TEntity>> Search()
     {
-        Func<TEntity, bool> predicate = e => true;
+        Func<TEntity, bool> predicate = _ => true;
         if (Predicates.Count > 0) predicate = e => Predicates.TrueForAll(p => p.Invoke(e));
         var list = await Query.ToListAsync();
         return list.Where(e => predicate.Invoke(e)).ToList();

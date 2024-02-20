@@ -3,12 +3,8 @@ using DotnetGenerator.Zynarator.Repository;
 
 namespace DotnetGenerator.Dao.Facade;
 
-public interface ProduitDao : IRepository<Produit> {
-
-    Task<Produit?> FindByReference(String reference);
-    Task<int>  DeleteByReference(String reference);
-
-
-
-
+public interface ProduitDao : IRepository<Produit>
+{
+    Task<Produit?> FindByReference(string reference);
+    Task<int> DeleteByReference(string reference);
 }

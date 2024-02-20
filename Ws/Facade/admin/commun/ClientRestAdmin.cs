@@ -14,14 +14,13 @@ namespace DotnetGenerator.WS.Facade;
 [Route("api/admin/client/")]
 [ApiController]
 [Authorize]
-public class ClientRest :  BaseController<Client, ClientDto, ClientService, ClientCriteria>
+public class ClientRest : BaseController<Client, ClientDto, ClientService, ClientCriteria>
 {
-
     [HttpGet("id/{id:long}")]
-    public override Task <ActionResult<ClientDto>> FindById(long id) => base.FindById(id);
+    public override Task<ActionResult<ClientDto>> FindById(long id) => base.FindById(id);
 
     [HttpGet]
-    public override Task <ActionResult<List<ClientDto>>> FindAll() => base.FindAll();
+    public override Task<ActionResult<List<ClientDto>>> FindAll() => base.FindAll();
 
     [HttpPost]
     public override Task<ActionResult<ClientDto>> Create(ClientDto dto) => base.Create(dto);
@@ -39,20 +38,24 @@ public class ClientRest :  BaseController<Client, ClientDto, ClientService, Clie
     public override Task<ActionResult<int>> Delete(List<ClientDto> dtos) => base.Delete(dtos);
 
     [HttpGet("optimized")]
-    public override async Task<ActionResult<List<ClientDto?>>> FindOptimized() {
+    public override async Task<ActionResult<List<ClientDto?>>> FindOptimized()
+    {
         return await base.FindOptimized();
     }
 
     [HttpPost("find-by-criteria")]
-    public override async Task<ActionResult<List<ClientDto?>>> FindByCriteria(ClientCriteria criteria) {
+    public override async Task<ActionResult<List<ClientDto?>>> FindByCriteria(ClientCriteria criteria)
+    {
         return await base.FindByCriteria(criteria);
     }
 
     [HttpPost("find-paginated-by-criteria")]
-    public override async Task<ActionResult<PaginatedList<ClientDto?>>> FindPaginatedByCriteria(ClientCriteria criteria) {
+    public override async Task<ActionResult<PaginatedList<ClientDto?>>> FindPaginatedByCriteria(ClientCriteria criteria)
+    {
         return await base.FindPaginatedByCriteria(criteria);
     }
 
-    public ClientRest(IContainer container, IMapper mapper): base(container, mapper) {
+    public ClientRest(IContainer container, IMapper mapper) : base(container, mapper)
+    {
     }
 }

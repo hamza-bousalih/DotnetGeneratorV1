@@ -12,14 +12,13 @@ namespace DotnetGenerator.WS.Facade;
 
 [Route("api/admin/produit/")]
 [ApiController]
-public class ProduitRest :  BaseController<Produit, ProduitDto, ProduitService, ProduitCriteria>
+public class ProduitRest : BaseController<Produit, ProduitDto, ProduitService, ProduitCriteria>
 {
-
     [HttpGet("id/{id:long}")]
-    public override Task <ActionResult<ProduitDto>> FindById(long id) => base.FindById(id);
+    public override Task<ActionResult<ProduitDto>> FindById(long id) => base.FindById(id);
 
     [HttpGet]
-    public override Task <ActionResult<List<ProduitDto>>> FindAll() => base.FindAll();
+    public override Task<ActionResult<List<ProduitDto>>> FindAll() => base.FindAll();
 
     [HttpPost]
     public override Task<ActionResult<ProduitDto>> Create(ProduitDto dto) => base.Create(dto);
@@ -37,20 +36,25 @@ public class ProduitRest :  BaseController<Produit, ProduitDto, ProduitService, 
     public override Task<ActionResult<int>> Delete(List<ProduitDto> dtos) => base.Delete(dtos);
 
     [HttpGet("optimized")]
-    public override async Task<ActionResult<List<ProduitDto?>>> FindOptimized() {
+    public override async Task<ActionResult<List<ProduitDto?>>> FindOptimized()
+    {
         return await base.FindOptimized();
     }
 
     [HttpPost("find-by-criteria")]
-    public override async Task<ActionResult<List<ProduitDto?>>> FindByCriteria(ProduitCriteria criteria) {
+    public override async Task<ActionResult<List<ProduitDto?>>> FindByCriteria(ProduitCriteria criteria)
+    {
         return await base.FindByCriteria(criteria);
     }
 
     [HttpPost("find-paginated-by-criteria")]
-    public override async Task<ActionResult<PaginatedList<ProduitDto?>>> FindPaginatedByCriteria(ProduitCriteria criteria) {
+    public override async Task<ActionResult<PaginatedList<ProduitDto?>>> FindPaginatedByCriteria(
+        ProduitCriteria criteria)
+    {
         return await base.FindPaginatedByCriteria(criteria);
     }
 
-    public ProduitRest(IContainer container, IMapper mapper): base(container, mapper) {
+    public ProduitRest(IContainer container, IMapper mapper) : base(container, mapper)
+    {
     }
 }

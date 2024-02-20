@@ -4,7 +4,7 @@ namespace DotnetGenerator.Zynarator.Security.Dao.Criteria;
 
 public class ModelPermissionUserCriteria : BaseCriteria
 {
-    public Boolean Value { get; set; }
+    public bool? Value { get; set; }
     public string? SubAttribute { get; set; }
     public string? SubAttributeLike { get; set; }
 

@@ -39,7 +39,7 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
             }
         }
 
-        if (modelPermissionUsers != null)
+        if (modelPermissionUsers == null) return item;
         {
             foreach (var element in modelPermissionUsers)
             {
@@ -52,24 +52,45 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
         return item;
     }
 
-
-    public async Task<User?> FindByReferenceEntity(User t)
+    public new async Task<User?> FindByReferenceEntity(User t)
     {
-        return await Repository.FindByUsername(t.Username!);
+        return await Repository.FindByUsername(t.UserName!);
     }
 
     public async Task<int> DeleteByReferenceEntity(User t)
     {
-        return await Repository.DeleteByUsername(t.Username!);
+        return await Repository.DeleteByUsername(t.UserName!);
+    }
+    
+    public async Task<User?> FindByUsername(string username)
+    {
+        return await Repository.FindByUsername(username);
     }
 
+    public async Task<int> DeleteByUsername(string username)
+    {
+        return await Repository.DeleteByUsername(username);
+    }
+
+    public async Task<bool> ChangePassword(string username, string password)
+    {
+        var user = await Repository.FindByUsername(username);
+        if (user == null) return false;
+        user.PasswordChanged = true;
+        return await Repository.ChangePassword(user, user.Password, password);
+    }
+
+    public async Task<bool> CheckPassword(User user, string password)
+    {
+        return await Repository.CheckPassword(user, password);
+    }
 
     public UserServiceImpl(IContainer container) : base(container)
     {
         _modelPermissionUserService = container.GetInstance<ModelPermissionUserService>();
         _roleUserService = container.GetInstance<RoleUserService>();
     }
-
-    private ModelPermissionUserService _modelPermissionUserService;
-    private RoleUserService _roleUserService;
+    
+    private readonly ModelPermissionUserService _modelPermissionUserService;
+    private readonly RoleUserService _roleUserService;
 }

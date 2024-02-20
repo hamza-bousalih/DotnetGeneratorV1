@@ -10,7 +10,6 @@ namespace DotnetGenerator;
 
 public static class Injector
 {
-
     public static void Inject(this ServiceRegistry registry)
     {
         registry.InjectRepositories().InjectSpecifications().InjectServices().InjectForSecurity();
@@ -19,7 +18,7 @@ public static class Injector
     public static ServiceRegistry InjectServices(this ServiceRegistry registry)
     {
         // Inject the service here
-                registry.For<ClientService>().Use<ClientServiceImpl>().Scoped();
+        registry.For<ClientService>().Use<ClientServiceImpl>().Scoped();
         registry.For<AchatService>().Use<AchatServiceImpl>().Scoped();
         registry.For<AchatItemService>().Use<AchatItemServiceImpl>().Scoped();
         registry.For<ProduitService>().Use<ProduitServiceImpl>().Scoped();

@@ -5,6 +5,6 @@ namespace DotnetGenerator.Zynarator.Security.Dao.Repository.Facade;
 
 public interface ActionPermissionDao : IRepository<ActionPermission>
 {
-    Task<ActionPermission?> FindByReference(String reference);
-    Task<int> DeleteByReference(String reference);
+    Task<ActionPermission?> FindByReference(string reference);
+    Task<int> DeleteByReference(string reference);
 }

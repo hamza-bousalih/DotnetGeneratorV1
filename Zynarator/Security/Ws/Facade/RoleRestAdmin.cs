@@ -1,16 +1,19 @@
 using AutoMapper;
 using DotnetGenerator.Zynarator.Controller;
 using DotnetGenerator.Zynarator.Security.Bean;
+using DotnetGenerator.Zynarator.Security.Common;
 using DotnetGenerator.Zynarator.Security.Dao.Criteria;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
 using DotnetGenerator.Zynarator.Security.Ws.Dto;
 using DotnetGenerator.Zynarator.Util;
 using Lamar;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
 [Route("api/admin/role/")]
+[Authorize(Roles = AuthoritiesConstants.Admin)]
 [ApiController]
 public class RoleRest : BaseController<Role, RoleDto, RoleService, RoleCriteria>
 {

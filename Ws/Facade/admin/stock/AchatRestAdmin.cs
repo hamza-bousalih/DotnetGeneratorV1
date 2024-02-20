@@ -12,14 +12,13 @@ namespace DotnetGenerator.WS.Facade;
 
 [Route("api/admin/achat/")]
 [ApiController]
-public class AchatRest :  BaseController<Achat, AchatDto, AchatService, AchatCriteria>
+public class AchatRest : BaseController<Achat, AchatDto, AchatService, AchatCriteria>
 {
-
     [HttpGet("id/{id:long}")]
-    public override Task <ActionResult<AchatDto>> FindById(long id) => base.FindById(id);
+    public override Task<ActionResult<AchatDto>> FindById(long id) => base.FindById(id);
 
     [HttpGet]
-    public override Task <ActionResult<List<AchatDto>>> FindAll() => base.FindAll();
+    public override Task<ActionResult<List<AchatDto>>> FindAll() => base.FindAll();
 
     [HttpPost]
     public override Task<ActionResult<AchatDto>> Create(AchatDto dto) => base.Create(dto);
@@ -37,20 +36,24 @@ public class AchatRest :  BaseController<Achat, AchatDto, AchatService, AchatCri
     public override Task<ActionResult<int>> Delete(List<AchatDto> dtos) => base.Delete(dtos);
 
     [HttpGet("optimized")]
-    public override async Task<ActionResult<List<AchatDto?>>> FindOptimized() {
+    public override async Task<ActionResult<List<AchatDto?>>> FindOptimized()
+    {
         return await base.FindOptimized();
     }
 
     [HttpPost("find-by-criteria")]
-    public override async Task<ActionResult<List<AchatDto?>>> FindByCriteria(AchatCriteria criteria) {
+    public override async Task<ActionResult<List<AchatDto?>>> FindByCriteria(AchatCriteria criteria)
+    {
         return await base.FindByCriteria(criteria);
     }
 
     [HttpPost("find-paginated-by-criteria")]
-    public override async Task<ActionResult<PaginatedList<AchatDto?>>> FindPaginatedByCriteria(AchatCriteria criteria) {
+    public override async Task<ActionResult<PaginatedList<AchatDto?>>> FindPaginatedByCriteria(AchatCriteria criteria)
+    {
         return await base.FindPaginatedByCriteria(criteria);
     }
 
-    public AchatRest(IContainer container, IMapper mapper): base(container, mapper) {
+    public AchatRest(IContainer container, IMapper mapper) : base(container, mapper)
+    {
     }
 }

@@ -1,8 +1,10 @@
 using DotnetGenerator;
 using DotnetGenerator.Data;
 using DotnetGenerator.ZConfig;
+using DotnetGenerator.Zynarator.Security.Common;
 using DotnetGenerator.Zynarator.Security.Config;
 using Lamar.Microsoft.DependencyInjection;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -16,7 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(
     options => options.UseMySql(
         builder.Configuration["ConnectionStrings:DefaultConnection"],
         new MySqlServerVersion(new Version(8, 0, 29)))
-    );
+);
 
 // Add services to the container.
 builder.Host.UseLamar((_, registry) => registry.Inject());

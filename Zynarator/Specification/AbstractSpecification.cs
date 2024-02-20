@@ -8,11 +8,11 @@ public abstract class AbstractSpecification<TEntity, TCriteria> : SpecificationH
     where TEntity : BusinessObject
     where TCriteria : BaseCriteria
 {
-    protected AbstractSpecification(DbSet<TEntity> table) : base(table)
+    protected AbstractSpecification(DbSet<TEntity> table): base(table.AsQueryable())
     {
     }
 
-    public void DefinePredicates()
+    public override void DefinePredicates()
     {
         Predicates = new List<Func<TEntity, bool>>();
         ConstructPredicates();

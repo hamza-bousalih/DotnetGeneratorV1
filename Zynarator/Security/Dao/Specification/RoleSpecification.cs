@@ -2,16 +2,24 @@ using DotnetGenerator.Data;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Dao.Criteria;
 using DotnetGenerator.Zynarator.Specification;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotnetGenerator.Zynarator.Security.Dao.Specification;
 
-public class RoleSpecification : AbstractSpecification<Role, RoleCriteria>
+public class RoleSpecification : SpecificationHelper<Role, RoleCriteria>
 {
-    public RoleSpecification(AppDbContext context) : base(context.Roles)
+    public RoleSpecification(RoleManager<Role> roleManager): base(roleManager.Roles)
     {
     }
 
-    protected override void ConstructPredicates()
+    public override void DefinePredicates()
+    {
+        Predicates = new List<Func<Role, bool>>();
+        ConstructPredicates();
+    }
+
+    protected void ConstructPredicates()
     {
         AddPredicateId();
 

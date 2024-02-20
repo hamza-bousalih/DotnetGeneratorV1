@@ -1,11 +1,10 @@
-
 using DotnetGenerator.Data;
 using DotnetGenerator.Zynarator.Repository;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Dao.Repository.Facade;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotnetGenerator.Dao.Impl;
+namespace DotnetGenerator.Zynarator.Security.Dao.Repository.Impl;
 
 public class ModelPermissionUserDaoImpl : Repository<ModelPermissionUser>, ModelPermissionUserDao
 {
