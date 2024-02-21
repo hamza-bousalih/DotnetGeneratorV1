@@ -15,36 +15,18 @@ namespace DotnetGenerator.Zynarator.Security.Ws;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<Role> _roleManager;
     private readonly UserService _userService;
 
-    public AuthController(UserManager<User> userManager, RoleManager<Role> roleManager, IContainer container)
+    public AuthController(IContainer container)
     {
-        _userManager = userManager;
-        _roleManager = roleManager;
         _userService = container.GetInstance<UserService>();
-    }
-
-    [HttpPost]
-    [Route("seed-roles")]
-    public async Task<ActionResult> SeedRoles()
-    {
-        var roles = new List<string> { AuthoritiesConstants.User, AuthoritiesConstants.Admin };
-        foreach (var role in roles)
-        {
-            var roleExists = await _roleManager.RoleExistsAsync(role);
-            if (!roleExists) await _roleManager.CreateAsync(new Role(role));
-        }
-
-        return Ok();
     }
 
     [HttpPost]
     [Route("signup")]
     public async Task<ActionResult> Signup([FromBody] SignupRequest signupRequest)
     {
-        var usernameToken = await _userManager.FindByNameAsync(signupRequest.Username) != null;
+        var usernameToken = await _userService.FindByUsername(signupRequest.Username) != null;
         if (usernameToken) return BadRequest("Username already token!");
         var user = new User
         {
@@ -59,10 +41,7 @@ public class AuthController : ControllerBase
             user.RoleUsers.Add(new RoleUser {Role = new Role(AuthoritiesConstants.User)});
 
         await _userService.Create(user);
-
-        foreach (var userRole in user.RoleUsers) 
-            await _userManager.AddToRoleAsync(user, userRole.Role!.Name!);
-
+        
         return Ok("new user created!");
     }
 

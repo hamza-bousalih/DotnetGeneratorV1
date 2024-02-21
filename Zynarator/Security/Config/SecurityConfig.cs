@@ -2,6 +2,7 @@
 using DotnetGenerator.Data;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Common;
+using DotnetGenerator.Zynarator.Security.Service.Facade;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;

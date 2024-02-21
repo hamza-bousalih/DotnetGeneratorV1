@@ -1,35 +1,51 @@
-using DotnetGenerator.Bean.Core;
+using DotnetGenerator.Zynarator.Security.Bean;
+using DotnetGenerator.Zynarator.Security.Common;
+using DotnetGenerator.Zynarator.Security.Service.Facade;
+using Lamar;
 
 namespace DotnetGenerator.Data;
 
 public class DataLoader
 {
-    private readonly AppDbContext _context;
+    private readonly RoleService _roleService;
+    private readonly UserService _userService;
 
-    public DataLoader(AppDbContext context)
+    public DataLoader(IContainer container)
     {
-        _context = context;
+        _roleService = container.GetInstance<RoleService>();
+        _userService = container.GetInstance<UserService>();
     }
 
-    public Task<int> Generate()
+    public async Task Load()
     {
-        GenerateClients();
-        var saveChangesAsync = _context.SaveChangesAsync();
-        return saveChangesAsync;
-    }
-
-    private void GenerateClients()
-    {
-        for (var i = 0; i < 10; i++)
+        var roles = new List<Role>
         {
-            var item = new Client()
-            {
-                Cin = "cin" + i,
-                Email = "Email" + i,
-                Description = "Description" + i,
-                Nom = "Nom" + i,
-            };
-            _context.Clients.Add(item);
-        }
+            new(AuthoritiesConstants.Admin),
+            new(AuthoritiesConstants.User)
+        };
+
+        await _roleService.Create(roles);
+
+        await _userService.Create(new User
+        {
+            UserName = "admin",
+            Email = "admin@mail.com",
+            LastName = "Admin",
+            FirstName = "Admin",
+            Password = "123",
+            RoleUsers = roles.Select(r => new RoleUser { Role = r }).ToList()
+        });
+
+        await _userService.Create(new User
+        {
+            UserName = "user",
+            Email = "user@mail.com",
+            LastName = "User",
+            FirstName = "User",
+            Password = "123",
+            RoleUsers = new List<RoleUser> { new() { Role = new Role(AuthoritiesConstants.User) } }
+        });
+
+        Console.WriteLine("Users Created");
     }
 }

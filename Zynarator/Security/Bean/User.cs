@@ -15,7 +15,7 @@ public class User : IdentityUser<long>, IBusinessObject
     public override string? Email { get; set; }
     public string? LastName { get; set; }
     public string? FirstName { get; set; }
-    
+
     [NotMapped]
     public string Password { get; set; }
     public DateTime createdAt;
@@ -27,6 +27,7 @@ public class User : IdentityUser<long>, IBusinessObject
         set => PhoneNumber = value;
     }
 
+    [InverseProperty(nameof(RoleUser.User))]
     public List<RoleUser>? RoleUsers { get; set; }
     public List<ModelPermissionUser>? ModelPermissionUsers { get; set; }
 

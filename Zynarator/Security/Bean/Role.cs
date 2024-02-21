@@ -1,4 +1,4 @@
-﻿using DotnetGenerator.Zynarator.Audit;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using DotnetGenerator.Zynarator.Bean;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,6 +12,9 @@ public class Role : IdentityRole<long>, IBusinessObject
         set => Name = value;
     }
 
+    [InverseProperty(nameof(RoleUser.Role))]
+    public List<RoleUser>? RoleUsers { get; set; }
+    
     public Role()
     {
     }
