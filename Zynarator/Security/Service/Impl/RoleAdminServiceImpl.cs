@@ -10,7 +10,7 @@ namespace DotnetGenerator.Zynarator.Security.Service.Impl;
 
 public class RoleServiceImpl : Service<Role, RoleDao, RoleCriteria, RoleSpecification>, RoleService
 {
-    public new async Task<Role?> FindByReferenceEntity(Role t)
+    protected override async Task<Role?> FindByReferenceEntity(Role t)
     {
         return await Repository.FindByAuthority(t.Authority!);
     }

@@ -25,7 +25,7 @@ public class DataLoader
         };
 
         await _roleService.Create(roles);
-
+        
         await _userService.Create(new User
         {
             UserName = "admin",
@@ -35,7 +35,7 @@ public class DataLoader
             Password = "123",
             RoleUsers = roles.Select(r => new RoleUser { Role = r }).ToList()
         });
-
+        
         await _userService.Create(new User
         {
             UserName = "user",

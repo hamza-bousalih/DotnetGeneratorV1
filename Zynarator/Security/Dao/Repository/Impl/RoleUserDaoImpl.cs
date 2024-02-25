@@ -29,7 +29,7 @@ public class RoleUserDaoImpl : Repository<RoleUser>, RoleUserDao
     }
 
 
-    public RoleUserDaoImpl(AppDbContext context) : base(context, context.RoleUsers)
+    public RoleUserDaoImpl(AppDbContext context) : base(context, context.UserRoles)
     {
     }
 

@@ -1,64 +1,108 @@
 using DotnetGenerator.Data;
-using DotnetGenerator.Zynarator.Repository;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Dao.Repository.Facade;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotnetGenerator.Zynarator.Security.Dao.Repository.Impl;
 
-public class UserDaoImpl : Repository<User>, UserDao
+public class UserDaoImpl : UserStore<User, Role, AppDbContext, long, IdentityUserClaim<long>, RoleUser,
+    IdentityUserLogin<long>, IdentityUserToken<long>, IdentityRoleClaim<long>>, UserDao
 {
-    private readonly UserManager<User> _userManager;
-    
-    public UserDaoImpl(AppDbContext context, UserManager<User> userManager) : base(context, context.Users)
+    public UserDaoImpl(AppDbContext context, IdentityErrorDescriber? describer = null) : base(context, describer)
     {
-        _userManager = userManager;
     }
 
-    protected override IQueryable<User> SetIncluded()
+    public async Task<User?> FindById(long id)
     {
-        return Table
-            .Include(u => u.ModelPermissionUsers)!
-            .ThenInclude(mp => mp.ModelPermission)
-            .Include(u => u.ModelPermissionUsers)!
-            .ThenInclude(mp => mp.ActionPermission)
-            .Include(u => u.RoleUsers)!
-            .ThenInclude(ru => ru.Role);
+        return await FindByIdAsync(id.ToString());
     }
 
-    public new async Task<User> Save(User user)
+    public async Task<List<User>> FindAll()
     {
-        var usernameToken = (user.UserName is not null && await FindByUsername(user.UserName) != null)
-                            && (user.Email is not null && await FindByEmail(user.Email) != null);
-        if (usernameToken) return null!;
+        return await Users.ToListAsync();
+    }
 
+    public async Task<List<User>> FindOptimized()
+    {
+        return await Users.Select(u => new User { Id = u.Id, UserName = u.UserName }).ToListAsync();
+    }
+
+    public async Task<User> Save(User user)
+    {
         user.AccountNonExpired = true;
         user.AccountNonLocked = true;
         user.CredentialsNonExpired = true;
         user.Enabled = true;
         user.PasswordChanged = false;
         user.createdAt = DateTime.Now;
-
-        var createResult = await _userManager.CreateAsync(user, user.Password ?? user.UserName!);
-
-        //TODO: create associated lists
-
+        await CreateAsync(user);
         return user;
     }
 
-    public async Task<bool> ChangePassword(User user, string currentPassword, string newPassword)
+    public async Task<List<User>> Save(List<User> users)
     {
-        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
-        return result.Succeeded;
+        var result = new List<User>();
+        foreach (var user in users)
+        {
+            var save = await Save(user);
+            result.Add(save);
+        }
+
+        return result;
     }
 
-    public async Task<bool> CheckPassword(User user, string password)
+    public async Task<User> Update(User user)
     {
-        return await _userManager.CheckPasswordAsync(user, password);
+        await UpdateAsync(user);
+        return user;
     }
 
-    public async Task<User?> FindByUsername(string username) => await FindIf(u => u.UserName == username);
-    public async Task<User?> FindByEmail(string email) => await FindIf(u => u.Email == email);
-    public async Task<int> DeleteByUsername(string username) => await DeleteIf(u => u.UserName == username);
+    public async Task<List<User>> Update(List<User> users)
+    {
+        var result = new List<User>();
+        foreach (var user in users)
+        {
+            var save = await Update(user);
+            result.Add(save);
+        }
+
+        return result;
+    }
+
+    public async Task<int> Delete(User user)
+    {
+        var result = await DeleteAsync(user);
+        return result.Succeeded ? 1 : 0;
+    }
+
+    public async Task<int> Delete(List<User> users)
+    {
+        var result = 0;
+        foreach (var user in users) result += await Delete(user);
+        return result;
+    }
+
+    public async Task<int> DeleteById(long id)
+    {
+        var found = await FindById(id);
+        return found == null ? 0 : await Delete(found);
+    }
+
+    public async Task<int> Count()
+    {
+        return await Users.CountAsync();
+    }
+
+    public async Task<User?> FindByUsername(string username)
+    {
+        return await FindByNameAsync(username);
+    }
+
+    public async Task<int> DeleteByUsername(string username)
+    {
+        var found = await FindByUsername(username);
+        return found == null ? 0 : await Delete(found);
+    }
 }

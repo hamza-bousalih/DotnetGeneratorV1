@@ -8,7 +8,7 @@ namespace DotnetGenerator.Zynarator.Security.Dao.Specification;
 
 public class RoleUserSpecification : SpecificationHelper<RoleUser, RoleUserCriteria>
 {
-    public RoleUserSpecification(AppDbContext context) : base(context.RoleUsers)
+    public RoleUserSpecification(AppDbContext context) : base(context.UserRoles)
     {
     }
 

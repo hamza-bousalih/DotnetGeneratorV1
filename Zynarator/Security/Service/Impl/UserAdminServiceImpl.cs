@@ -5,11 +5,14 @@ using DotnetGenerator.Zynarator.Security.Dao.Specification;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
 using DotnetGenerator.Zynarator.Service;
 using Lamar;
+using Microsoft.AspNetCore.Identity;
 
 namespace DotnetGenerator.Zynarator.Security.Service.Impl;
 
 public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecification>, UserService
 {
+    private readonly UserManager<User> _userManager;
+
     public override async Task<User> Create(User item)
     {
         RoleUser[]? roleUsers = null;
@@ -27,8 +30,8 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
             item.ModelPermissionUsers.CopyTo(modelPermissionUsers);
             item.ModelPermissionUsers.Clear();
         }
-
-        await base.Create(item);
+        
+        await _userManager.CreateAsync(item, item.Password);
         if (roleUsers != null)
         {
             foreach (var element in roleUsers)
@@ -61,7 +64,7 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
     {
         return await Repository.DeleteByUsername(t.UserName!);
     }
-    
+
     public async Task<User?> FindByUsername(string username)
     {
         return await Repository.FindByUsername(username);
@@ -77,20 +80,22 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
         var user = await Repository.FindByUsername(username);
         if (user == null) return false;
         user.PasswordChanged = true;
-        return await Repository.ChangePassword(user, user.Password, password);
+        var result = await _userManager.ChangePasswordAsync(user, user.Password, password);
+        return result.Succeeded;
     }
 
     public async Task<bool> CheckPassword(User user, string password)
     {
-        return await Repository.CheckPassword(user, password);
+        return await _userManager.CheckPasswordAsync(user, password);
     }
 
-    public UserServiceImpl(IContainer container) : base(container)
+    public UserServiceImpl(IContainer container, UserManager<User> userManager) : base(container)
     {
+        _userManager = userManager;
         _modelPermissionUserService = container.GetInstance<ModelPermissionUserService>();
         _roleUserService = container.GetInstance<RoleUserService>();
     }
-    
+
     private readonly ModelPermissionUserService _modelPermissionUserService;
     private readonly RoleUserService _roleUserService;
 }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotnetGenerator.Data;
 
-public class AppDbContext : IdentityDbContext<User, Role, long>
+public class AppDbContext : IdentityDbContext<User, Role, long, IdentityUserClaim<long>, RoleUser, IdentityUserLogin<long>, IdentityRoleClaim<long>, IdentityUserToken<long>>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -19,9 +19,9 @@ public class AppDbContext : IdentityDbContext<User, Role, long>
     public required DbSet<Produit> Produits { get; init; }
 
     // For Security
-    // public override required DbSet<User> Users { get; set; }
-    // public override required DbSet<Role> Roles { get; set; }
-    public required DbSet<RoleUser> RoleUsers { get; init; }
+    public override required DbSet<User> Users { get; set; }
+    public override required DbSet<Role> Roles { get; set; }
+    public override required DbSet<RoleUser> UserRoles { get; set; }
     public required DbSet<ModelPermissionUser> ModelPermissionUsers { get; init; }
     public required DbSet<ActionPermission> ActionPermissions { get; init; }
     public required DbSet<ModelPermission> ModelPermissions { get; init; }
@@ -31,21 +31,36 @@ public class AppDbContext : IdentityDbContext<User, Role, long>
         configurationBuilder.Properties<decimal>().HaveColumnType("decimal(18,2)");
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        builder.Entity<User>().ToTable("User");
-        builder.Entity<Role>().ToTable("Role");
-
-        builder.Entity<IdentityUserRole<long>>().ToTable("UserRole");
-        builder.Entity<IdentityUserClaim<long>>().ToTable("UserClaim");
-        builder.Entity<IdentityUserLogin<long>>().ToTable("UserLogin");
-
-        builder.Entity<IdentityRoleClaim<long>>().ToTable("RoleClaim");
-        builder.Entity<IdentityUserToken<long>>().ToTable("UserToken");
-        
-        builder.RegisterEntities();
+        base.OnModelCreating(modelBuilder);
      
-        base.OnModelCreating(builder);
+        modelBuilder.Entity<User>().ToTable("User");
+        modelBuilder.Entity<Role>().ToTable("Role");
+
+        modelBuilder.Entity<RoleUser>()
+            .HasKey(ru => ru.Id);
+
+        modelBuilder.Entity<RoleUser>().ToTable("RoleUser");
+
+        modelBuilder.Entity<RoleUser>()
+            .HasOne(ru => ru.User)
+            .WithMany(u => u!.RoleUsers)
+            .HasForeignKey(ru => ru.UserId)
+            .IsRequired();
+
+        modelBuilder.Entity<RoleUser>()
+            .HasOne(ru => ru.Role)
+            .WithMany(r => r!.RoleUsers)
+            .HasForeignKey(ru => ru.RoleId)
+            .IsRequired();
+        
+        modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("UserClaim");
+        modelBuilder.Entity<IdentityUserLogin<long>>().ToTable("UserLogin");
+        modelBuilder.Entity<IdentityRoleClaim<long>>().ToTable("RoleClaim");
+        modelBuilder.Entity<IdentityUserToken<long>>().ToTable("UserToken");
+        
+        modelBuilder.RegisterEntities();
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
 [Route("api/admin/roleUser/")]
-[Authorize(Roles = AuthoritiesConstants.Admin)]
+[Authorize]
 [ApiController]
 public class RoleUserRest : BaseController<RoleUser, RoleUserDto, RoleUserService, RoleUserCriteria>
 {

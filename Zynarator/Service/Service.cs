@@ -46,7 +46,7 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
         var list = new List<TEntity>();
         foreach (var item in items)
         {
-            if (await FindByReferenceEntity(item) != null)
+            if (await FindByReferenceEntity(item) == null)
             {
                 NullifyEntities(item);
                 await Repository.Save(item);
