@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetGenerator.Zynarator.Security.Ws;
 
-[Route("/")]
+[Route("/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
         };
         
         if (user.RoleUsers.Count == 0) 
-            user.RoleUsers.Add(new RoleUser {Role = new Role(AuthoritiesConstants.User)});
+            user.RoleUsers.Add(new RoleUser {Role = new Role(Roles.User)});
 
         await _userService.Create(user);
         

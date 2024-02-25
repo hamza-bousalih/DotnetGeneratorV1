@@ -16,7 +16,14 @@ public class UserDaoImpl : UserStore<User, Role, AppDbContext, long, IdentityUse
 
     public async Task<User?> FindById(long id)
     {
-        return await FindByIdAsync(id.ToString());
+        return await Users
+            .Include(u => u.RoleUsers)!
+            .ThenInclude(ur => ur.Role)
+            .Include(u => u.ModelPermissionUsers)!
+            .ThenInclude(mp => mp.ActionPermission)
+            .Include(u => u.ModelPermissionUsers)!
+            .ThenInclude(mp => mp.ModelPermission)
+            .FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task<List<User>> FindAll()
@@ -102,7 +109,18 @@ public class UserDaoImpl : UserStore<User, Role, AppDbContext, long, IdentityUse
 
     public async Task<int> DeleteByUsername(string username)
     {
-        var found = await FindByUsername(username);
-        return found == null ? 0 : await Delete(found);
+        return await Users.Where(u => u.UserName == username).ExecuteDeleteAsync();
+    }
+
+    public async Task<User?> FindByNameAsync(string normalizedUserName)
+    {
+        return await Users
+            .Include(u => u.RoleUsers)!
+            .ThenInclude(ur => ur.Role)
+            .Include(u => u.ModelPermissionUsers)!
+            .ThenInclude(mp => mp.ActionPermission)
+            .Include(u => u.ModelPermissionUsers)!
+            .ThenInclude(mp => mp.ModelPermission)
+            .FirstOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName);
     }
 }

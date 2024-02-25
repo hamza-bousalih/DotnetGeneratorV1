@@ -12,7 +12,6 @@ public class Role : IdentityRole<long>, IBusinessObject
         set => Name = value;
     }
 
-    [InverseProperty(nameof(RoleUser.Role))]
     public List<RoleUser>? RoleUsers { get; set; }
     
     public Role()

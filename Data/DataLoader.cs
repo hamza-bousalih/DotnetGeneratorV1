@@ -20,8 +20,8 @@ public class DataLoader
     {
         var roles = new List<Role>
         {
-            new(AuthoritiesConstants.Admin),
-            new(AuthoritiesConstants.User)
+            new(Roles.Admin),
+            new(Roles.User)
         };
 
         await _roleService.Create(roles);
@@ -43,7 +43,7 @@ public class DataLoader
             LastName = "User",
             FirstName = "User",
             Password = "123",
-            RoleUsers = new List<RoleUser> { new() { Role = new Role(AuthoritiesConstants.User) } }
+            RoleUsers = new List<RoleUser> { new() { Role = new Role(Roles.User) } }
         });
 
         Console.WriteLine("Users Created");

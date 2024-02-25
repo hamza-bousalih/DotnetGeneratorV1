@@ -35,30 +35,26 @@ public class AppDbContext : IdentityDbContext<User, Role, long, IdentityUserClai
     {
         base.OnModelCreating(modelBuilder);
      
-        modelBuilder.Entity<User>().ToTable("User");
-        modelBuilder.Entity<Role>().ToTable("Role");
+        modelBuilder.Entity<User>().ToTable("Users");
+        modelBuilder.Entity<Role>().ToTable("Roles");
 
-        modelBuilder.Entity<RoleUser>()
-            .HasKey(ru => ru.Id);
-
-        modelBuilder.Entity<RoleUser>().ToTable("RoleUser");
-
+        modelBuilder.Entity<RoleUser>().HasKey(ru => ru.Id);
+        modelBuilder.Entity<RoleUser>().ToTable("RoleUsers");
         modelBuilder.Entity<RoleUser>()
             .HasOne(ru => ru.User)
             .WithMany(u => u!.RoleUsers)
             .HasForeignKey(ru => ru.UserId)
             .IsRequired();
-
         modelBuilder.Entity<RoleUser>()
             .HasOne(ru => ru.Role)
             .WithMany(r => r!.RoleUsers)
             .HasForeignKey(ru => ru.RoleId)
             .IsRequired();
         
-        modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("UserClaim");
-        modelBuilder.Entity<IdentityUserLogin<long>>().ToTable("UserLogin");
-        modelBuilder.Entity<IdentityRoleClaim<long>>().ToTable("RoleClaim");
-        modelBuilder.Entity<IdentityUserToken<long>>().ToTable("UserToken");
+        modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("UserClaims");
+        modelBuilder.Entity<IdentityUserLogin<long>>().ToTable("UserLogins");
+        modelBuilder.Entity<IdentityRoleClaim<long>>().ToTable("RoleClaims");
+        modelBuilder.Entity<IdentityUserToken<long>>().ToTable("UserTokens");
         
         modelBuilder.RegisterEntities();
     }

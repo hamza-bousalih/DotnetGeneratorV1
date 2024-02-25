@@ -1,6 +1,7 @@
 using AutoMapper;
 using DotnetGenerator.Zynarator.Controller;
 using DotnetGenerator.Zynarator.Security.Bean;
+using DotnetGenerator.Zynarator.Security.Common;
 using DotnetGenerator.Zynarator.Security.Dao.Criteria;
 using DotnetGenerator.Zynarator.Security.Payload.Request;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
@@ -13,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
 [Route("api/admin/user/")]
-[Authorize]
+[Authorize(Roles = Roles.Admin)]
 [ApiController]
 public class UserRest : BaseController<User, UserDto, UserService, UserCriteria>
 {
@@ -57,15 +58,16 @@ public class UserRest : BaseController<User, UserDto, UserService, UserCriteria>
     }
 
     [HttpGet("/user/{username}")]
-    public Task<User?> FindByUsername(string username)
+    public async Task<UserDto?> FindByUsername(string username)
     {
-        return Service.FindByUsername(username);
+        var result = await Service.FindByUsername(username);
+        return ToDto(result);
     }
 
     [HttpDelete("/user/{username}")]
-    public Task<int> DeleteByUsername(string username)
+    public async Task<int> DeleteByUsername(string username)
     {
-        return Service.DeleteByUsername(username);
+        return await Service.DeleteByUsername(username);
     }
     
     [HttpPost("/changePassword")]

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
 [Route("api/admin/modelPermission/")]
-[Authorize(Roles = AuthoritiesConstants.Admin)]
+[Authorize(Roles = Roles.Admin)]
 [ApiController]
 public class ModelPermissionRest : BaseController<ModelPermission, ModelPermissionDto, ModelPermissionService,
     ModelPermissionCriteria>

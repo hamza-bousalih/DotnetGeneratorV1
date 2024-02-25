@@ -4,6 +4,7 @@ using DotnetGenerator.ZConfig;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Common;
 using DotnetGenerator.Zynarator.Security.Config;
+using DotnetGenerator.Zynarator.Security.Middleware;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -58,5 +59,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors(CorsConfig.CorsName);
+
+app.UseMiddleware<JwtMiddleware>();
 
 app.Run();
