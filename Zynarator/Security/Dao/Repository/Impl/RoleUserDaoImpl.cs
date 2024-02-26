@@ -28,6 +28,16 @@ public class RoleUserDaoImpl : Repository<RoleUser>, RoleUserDao
         return await DeleteIf(item => item.Role!.Id == id);
     }
 
+    public async Task<long> CountByRoleAuthority(string authority)
+    {
+        return await Table.Where(i => i.Role != null && i.Role.Authority == authority).CountAsync();
+    }
+
+    public async Task<long> CountByUserEmail(string email)
+    {
+        return await Table.Where(i => i.User != null && i.User.Email == email).CountAsync();
+    }
+
 
     public RoleUserDaoImpl(AppDbContext context) : base(context, context.UserRoles)
     {

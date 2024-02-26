@@ -26,4 +26,9 @@ public interface IService<TEntity, TCriteria>
 
     Task<PaginatedList<TEntity>> FindPaginatedByCriteria(TCriteria criteria);
     Task<List<TEntity>> FindOptimized();
+
+    List<List<TEntity>> GetToBeSavedAndToBeDeleted(List<TEntity>? oldList, List<TEntity>? newList)
+    {
+        return FilterLists.GetToBeSavedAndToBeDeleted(oldList, newList);
+    }
 }

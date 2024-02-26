@@ -11,4 +11,10 @@ public interface ModelPermissionUserDao : IRepository<ModelPermissionUser>
     Task<int> DeleteByModelPermissionId(long id);
     Task<List<ModelPermissionUser>?> FindByUserId(long id);
     Task<int> DeleteByUserId(long id);
+    Task<long> CountByActionPermissionReference(string reference);
+    Task<long> CountByModelPermissionReference(string reference);
+    Task<ModelPermissionUser?> FindByUserUsernameAndModelReferenceAndActionReference
+        (string username, string modelReference, string actionReference);
+
+    Task<long> CountByUserEmail(string email);
 }

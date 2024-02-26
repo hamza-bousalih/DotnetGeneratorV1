@@ -30,7 +30,7 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
             item.ModelPermissionUsers.CopyTo(modelPermissionUsers);
             item.ModelPermissionUsers.Clear();
         }
-        
+
         await _userManager.CreateAsync(item, item.Password);
         if (roleUsers != null)
         {
@@ -87,6 +87,36 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
     public async Task<bool> CheckPassword(User user, string password)
     {
         return await _userManager.CheckPasswordAsync(user, password);
+    }
+
+    public override async Task<User?> FindWithAssociatedLists(long id)
+    {
+        var result = await Repository.FindById(id);
+        if (result == null || result.Id == 0) return result;
+        result.ModelPermissionUsers = await _modelPermissionUserService.FindByUserId(id);
+        result.RoleUsers = await _roleUserService.FindByUserId(id);
+        return result;
+    }
+
+    protected override async Task DeleteAssociatedLists(long id)
+    {
+        await _modelPermissionUserService.DeleteByUserId(id);
+        await _roleUserService.DeleteByUserId(id);
+    }
+
+    protected override async Task UpdateWithAssociatedLists(User? user)
+    {
+        if (user != null && user.Id != 0) {
+            List<List<ModelPermissionUser>> resultModelPermissionUsers = _modelPermissionUserService.GetToBeSavedAndToBeDeleted(await _modelPermissionUserService.FindByUserId(user.Id), user.ModelPermissionUsers);
+            await _modelPermissionUserService.Delete(resultModelPermissionUsers[1]);
+            resultModelPermissionUsers[0].ForEach(e => e.User = user);
+            await _modelPermissionUserService.Update(resultModelPermissionUsers[0], true);
+            
+            List<List<RoleUser>> resultRoleUsers = _roleUserService.GetToBeSavedAndToBeDeleted(await _roleUserService.FindByUserId(user.Id), user.RoleUsers);
+            await _roleUserService.Delete(resultRoleUsers[1]);
+            resultRoleUsers[0].ForEach(e => e.User = user);
+            await _roleUserService.Update(resultRoleUsers[0], true);
+        }
     }
 
     public UserServiceImpl(IContainer container, UserManager<User> userManager) : base(container)

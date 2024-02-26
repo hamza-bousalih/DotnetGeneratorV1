@@ -50,4 +50,14 @@ public class RoleUserServiceImpl : Service<RoleUser, RoleUserDao, RoleUserCriter
     {
         return await Repository.DeleteByRoleId(id);
     }
+
+    public async Task<long> CountByRoleAuthority(string authority)
+    {
+        return await Repository.CountByRoleAuthority(authority);
+    }
+
+    public async Task<long> CountByUserEmail(string email)
+    {
+        return await Repository.CountByUserEmail(email);
+    }
 }

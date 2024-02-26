@@ -7,11 +7,14 @@ using Lamar;
 using Microsoft.AspNetCore.Mvc;
 using DotnetGenerator.Zynarator.Util;
 using DotnetGenerator.Dao.Criteria;
+using DotnetGenerator.Zynarator.Security.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotnetGenerator.WS.Facade;
 
 [Route("api/admin/achatItem/")]
 [ApiController]
+[Authorize(Roles = Roles.Admin)]
 public class AchatItemRest : BaseController<AchatItem, AchatItemDto, AchatItemService, AchatItemCriteria>
 {
     [HttpGet("id/{id:long}")]

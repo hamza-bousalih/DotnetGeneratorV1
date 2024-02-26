@@ -7,13 +7,14 @@ using Lamar;
 using Microsoft.AspNetCore.Mvc;
 using DotnetGenerator.Zynarator.Util;
 using DotnetGenerator.Dao.Criteria;
+using DotnetGenerator.Zynarator.Security.Common;
 using Microsoft.AspNetCore.Authorization;
 
 namespace DotnetGenerator.WS.Facade;
 
 [Route("api/admin/client/")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = Roles.Admin)]
 public class ClientRest : BaseController<Client, ClientDto, ClientService, ClientCriteria>
 {
     [HttpGet("id/{id:long}")]

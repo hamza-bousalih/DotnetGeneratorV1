@@ -32,7 +32,7 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
 
     public virtual async Task<List<TEntity>> FindAll() =>
         await Repository.FindAll();
-    
+
     public virtual async Task<TEntity> Create(TEntity item)
     {
         var loaded = item.Id != 0 ? default : await FindByReferenceEntity(item);
@@ -125,12 +125,12 @@ public abstract class Service<TEntity, TRepository, TCriteria, TSpecification> :
         return t.Id == 0 ? default : await FindById(t.Id);
     }
 
-    public async Task<TEntity?> FindWithAssociatedLists(long id)
+    public virtual async Task<TEntity?> FindWithAssociatedLists(long id)
     {
         return await FindById(id);
     }
 
-    public async Task DeleteWithAssociatedLists(TEntity t)
+    public virtual async Task DeleteWithAssociatedLists(TEntity t)
     {
         await DeleteAssociatedLists(t.Id);
         await Delete(t);

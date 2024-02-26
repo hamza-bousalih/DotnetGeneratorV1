@@ -35,10 +35,38 @@ public class ModelPermissionUserDaoImpl : Repository<ModelPermissionUser>, Model
 
     public async Task<int> DeleteByUserId(long id)
     {
-        return await DeleteIf(item => item.User!.Id == id);
+        return await DeleteIf(item => item.User != null && item.User.Id == id);
     }
 
+    public async Task<long> CountByActionPermissionReference(string reference)
+    {
+        return await Table.Where(i => i.ActionPermission != null && i.ActionPermission.Reference == reference).CountAsync();
+    }
 
+    public async Task<long> CountByModelPermissionReference(string reference)
+    {
+        return await Table.Where(i => i.ModelPermission != null && i.ModelPermission.Reference == reference).CountAsync();
+    }
+    
+    public async Task<long> CountByUserEmail(string email)
+    {
+        return await Table.Where(i => i.User != null && i.User.Email == email).CountAsync();
+    }
+
+    public async Task<ModelPermissionUser?> FindByUserUsernameAndModelReferenceAndActionReference(string username,
+        string modelReference,
+        string actionReference)
+    {
+        return await Table.FirstOrDefaultAsync(i =>
+            i.ActionPermission != null &&
+            i.ModelPermission != null &&
+            i.User != null &&
+            i.User.UserName == username &&
+            i.ModelPermission.Reference == modelReference &&
+            i.ActionPermission.Reference == actionReference
+        );
+    }
+    
     public ModelPermissionUserDaoImpl(AppDbContext context) : base(context, context.ModelPermissionUsers)
     {
     }

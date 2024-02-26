@@ -12,4 +12,11 @@ public interface ModelPermissionUserService : IService<ModelPermissionUser, Mode
     Task<int> DeleteByModelPermissionId(long id);
     Task<List<ModelPermissionUser>?> FindByUserId(long id);
     Task<int> DeleteByUserId(long id);
+    
+    Task<List<ModelPermissionUser>> InitModelPermissionUser();
+    Task<long> CountByActionPermissionReference(String reference);
+    Task<long> CountByModelPermissionReference(String reference);
+    Task<bool> FindByUserUsernameAndModelPermissionReferenceAndActionPermissionReference(String username, String modelReference, String actionReference);
+    Task<long> CountByUserEmail(String email);
+
 }

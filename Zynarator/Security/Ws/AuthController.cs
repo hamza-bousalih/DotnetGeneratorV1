@@ -6,13 +6,14 @@ using DotnetGenerator.Zynarator.Security.Payload.Request;
 using DotnetGenerator.Zynarator.Security.Payload.Response;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
 using Lamar;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetGenerator.Zynarator.Security.Ws;
 
-[Route("/auth")]
+[Route("/")]
 [ApiController]
+[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private readonly UserService _userService;
@@ -70,14 +71,15 @@ public class AuthController : ControllerBase
 
         var token = JwtUtils.GenerateToken(claims);
 
-        return Ok(new JwtResponse
-            {
-                Id = user.Id.ToString(),
-                Email = user.Email,
-                Roles = user.RoleUsers?.Select(roleUser => roleUser.Role?.Name!).ToHashSet(),
-                Token = token,
-                Username = user.UserName,
-            }
-        );
+        var jwtResponse = new JwtResponse
+        {
+            Id = user.Id.ToString(),
+            Email = user.Email,
+            Roles = user.RoleUsers?.Select(roleUser => roleUser.Role?.Name!).ToHashSet(),
+            Token = token,
+            Username = user.UserName,
+        };
+        Response.Headers.Add(JwtParams.JwtHeader, JwtParams.JwtPrefix + token);
+        return Ok(jwtResponse);
     }
 }

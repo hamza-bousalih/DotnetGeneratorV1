@@ -3,7 +3,7 @@ namespace DotnetGenerator.ZConfig;
 public static class CorsConfig
 {
     public const string CorsName = "CorsPolicy";
-    private const string Origin = "http://localhost:4200";
+    private const string Origin = "http://localhost:3000";
 
     public static void ConfigCors(this IServiceCollection services)
     {
