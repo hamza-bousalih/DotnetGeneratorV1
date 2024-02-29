@@ -1,9 +1,12 @@
+using DotnetGenerator.Data;
 using DotnetGenerator.Zynarator.Bean;
 
 namespace DotnetGenerator.Zynarator.Repository;
 
 public interface IRepository<TEntity> where TEntity : IBusinessObject
 {
+    public AppDbContext Context { get; }
+    
     // Retrieve operations
     Task<TEntity?> FindById(long id);
     Task<List<TEntity>> FindAll();

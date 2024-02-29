@@ -8,7 +8,7 @@ namespace DotnetGenerator.Zynarator.Repository;
 
 public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : IBusinessObject
 {
-    protected readonly AppDbContext Context;
+    public AppDbContext Context { get; }
     protected readonly IQueryable<TEntity> Table;
     protected IQueryable<TEntity> IncludedTable;
 
@@ -32,7 +32,7 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
 
     protected void SetUnchangedEntry<TProperty>(TProperty? property) where TProperty : IBusinessObject
     {
-        if (property is not null && property.Id != 0) 
+        if (property is not null && property.Id != 0)
             Context.Entry(property).State = EntityState.Unchanged;
     }
 

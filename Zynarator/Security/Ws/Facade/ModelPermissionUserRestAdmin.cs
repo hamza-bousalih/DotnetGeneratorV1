@@ -9,10 +9,11 @@ using DotnetGenerator.Zynarator.Util;
 using Lamar;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
-[Route("api/admin/modelPermissionUser/")]
+[Route("api/modelPermissionUser/")]
 [Authorize(Roles = Roles.Admin)]
 [ApiController]
 public class ModelPermissionUserRest : BaseController<ModelPermissionUser, ModelPermissionUserDto,
@@ -57,6 +58,18 @@ public class ModelPermissionUserRest : BaseController<ModelPermissionUser, Model
         ModelPermissionUserCriteria criteria)
     {
         return await base.FindPaginatedByCriteria(criteria);
+    }
+    
+    [HttpGet("init-ModelPermissionUser")]
+    public async Task<ActionResult<PaginatedList<ModelPermissionUserDto?>>> InitModelPermissionUser() {
+        var list = await Service.InitModelPermissionUser();
+        var dtos =  ToDto(list);
+        return dtos.IsNullOrEmpty() ? Conflict() : Ok(dtos);
+    }
+    
+    [HttpGet("user/{username}/model/{modelReference}/action/{actionReference}")]
+    public async Task<bool> FindByUserUsernameAndModelPermissionReferenceAndActionPermissionReference(string username,string modelReference,string actionReference) {
+        return await Service.FindByUserUsernameAndModelPermissionReferenceAndActionPermissionReference(username, modelReference, actionReference);
     }
 
     public ModelPermissionUserRest(IContainer container, IMapper mapper) : base(container, mapper)

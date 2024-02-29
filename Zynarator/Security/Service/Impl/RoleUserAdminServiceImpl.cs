@@ -1,5 +1,6 @@
 ﻿using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Dao.Criteria;
+using DotnetGenerator.Zynarator.Security.Dao.Repository;
 using DotnetGenerator.Zynarator.Security.Dao.Repository.Facade;
 using DotnetGenerator.Zynarator.Security.Dao.Specification;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
@@ -13,17 +14,23 @@ public class RoleUserServiceImpl : Service<RoleUser, RoleUserDao, RoleUserCriter
 {
     private readonly RoleService _roleService;
 
-    public override async Task<RoleUser> Create(RoleUser item)
+    public override async Task<RoleUser?> Create(RoleUser item, bool useTransaction = true)
     {
-        if (item.Role is not null)
-        {
-            var role = await _roleService.Create(item.Role);
-            item.Role = role;
-        }
+        return await Repository.TransactionBeginNullable(
+            async () =>
+            {
+                if (item.Role is not null)
+                {
+                    var role = await _roleService.Create(item.Role, false);
+                    item.Role = role;
+                }
 
-        if (item.Role != null) item.UserId = item.Role.Id;
-        if (item.User != null) item.UserId = item.User.Id;
-        return await base.Create(item);
+                if (item.Role != null) item.UserId = item.Role.Id;
+                if (item.User != null) item.UserId = item.User.Id;
+                return await base.Create(item, useTransaction);
+            },
+            useTransaction
+        );
     }
 
     public RoleUserServiceImpl(IContainer container) : base(container)

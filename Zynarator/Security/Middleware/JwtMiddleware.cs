@@ -12,6 +12,8 @@ public class JwtMiddleware: IMiddleware
 {
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        context.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization");
+        
         if (context.Request.Method == RequestMethod.Options.Method)
         {
             await next(context);

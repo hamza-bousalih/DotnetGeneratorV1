@@ -1,5 +1,6 @@
 using DotnetGenerator.Zynarator.Bean;
 using DotnetGenerator.Zynarator.Criteria;
+using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Util;
 
 namespace DotnetGenerator.Zynarator.Service;
@@ -11,15 +12,15 @@ public interface IService<TEntity, TCriteria>
     Task<TEntity?> FindById(long id);
     Task<List<TEntity>> FindAll();
 
-    Task<TEntity> Create(TEntity item);
-    Task<List<TEntity>> Create(List<TEntity> items);
+    Task<TEntity?> Create(TEntity item, bool useTransaction = true);
+    Task<List<TEntity>> Create(List<TEntity> items, bool useTransaction = true);
 
-    Task<TEntity> Update(TEntity item);
-    Task<List<TEntity>> Update(List<TEntity> items, bool createIfNotExist = true);
+    Task<TEntity> Update(TEntity item, bool useTransaction = true);
+    Task<List<TEntity>> Update(List<TEntity> items, bool createIfNotExist = true, bool useTransaction = true);
 
-    Task<int> DeleteById(long id);
-    Task<int> Delete(TEntity item);
-    Task<int> Delete(List<TEntity> items);
+    Task<int> DeleteById(long id, bool useTransaction = true);
+    Task<int> Delete(TEntity item, bool useTransaction = true);
+    Task<int> Delete(List<TEntity> items, bool useTransaction = true);
 
 
     Task<List<TEntity>> FindByCriteria(TCriteria criteria);

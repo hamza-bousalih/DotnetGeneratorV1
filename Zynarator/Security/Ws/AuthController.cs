@@ -33,16 +33,16 @@ public class AuthController : ControllerBase
         {
             UserName = signupRequest.Username,
             Email = signupRequest.Email,
-            RoleUsers = signupRequest.Roles.Select(r => new RoleUser() {Role = new Role(r)}).ToList(),
+            RoleUsers = signupRequest.Roles.Select(r => new RoleUser() { Role = new Role(r) }).ToList(),
             SecurityStamp = Guid.NewGuid().ToString(),
             Password = signupRequest.Password
         };
-        
-        if (user.RoleUsers.Count == 0) 
-            user.RoleUsers.Add(new RoleUser {Role = new Role(Roles.User)});
+
+        if (user.RoleUsers.Count == 0)
+            user.RoleUsers.Add(new RoleUser { Role = new Role(Roles.User) });
 
         await _userService.Create(user);
-        
+
         return Ok("new user created!");
     }
 
@@ -58,16 +58,16 @@ public class AuthController : ControllerBase
 
         // user.RoleUsers = (await _userManager.GetRolesAsync(user)).Map(e => new RoleUser(user, new Role(e))).ToList();
 
+        var roles = user.RoleUsers?.Select(roleUser => roleUser.Role?.Name!).ToHashSet() ?? new HashSet<string>();
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.UserName!),
             new("id", user.Id.ToString()),
-            new("JWTID", Guid.NewGuid().ToString()),
+            new("JWTID", Guid.NewGuid().ToString())
         };
 
-        claims.AddRange(user.RoleUsers is null
-            ? new List<Claim>()
-            : user.RoleUsers.Select(roleUser => new Claim("roles", roleUser.Role?.Name!)));
+        if (roles.Count == 1) claims.Add(new Claim("roles", ""));
+        claims.AddRange(user.RoleUsers is null ? new List<Claim>() : roles.Select(role => new Claim("roles", role)));
 
         var token = JwtUtils.GenerateToken(claims);
 
@@ -75,8 +75,8 @@ public class AuthController : ControllerBase
         {
             Id = user.Id.ToString(),
             Email = user.Email,
-            Roles = user.RoleUsers?.Select(roleUser => roleUser.Role?.Name!).ToHashSet(),
-            Token = token,
+            Roles = roles,
+            AccessToken = token,
             Username = user.UserName,
         };
         Response.Headers.Add(JwtParams.JwtHeader, JwtParams.JwtPrefix + token);

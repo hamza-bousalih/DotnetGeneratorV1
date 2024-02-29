@@ -2,7 +2,7 @@
 
 public class JwtResponse
 {
-    public string Token = string.Empty;
+    public string AccessToken = string.Empty;
     public string Type = "Bearer";
     public string Id = string.Empty;
     public string? Username;

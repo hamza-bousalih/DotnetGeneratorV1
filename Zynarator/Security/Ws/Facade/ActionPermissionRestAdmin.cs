@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
-[Route("api/admin/actionPermission/")]
+[Route("api/actionPermission/")]
 [Authorize(Roles = Roles.Admin)]
 [ApiController]
 public class ActionPermissionRest : BaseController<ActionPermission, ActionPermissionDto, ActionPermissionService,

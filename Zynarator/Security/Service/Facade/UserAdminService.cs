@@ -10,4 +10,5 @@ public interface UserService : IService<User, UserCriteria>
     Task<int> DeleteByUsername(string username);
     Task<bool> ChangePassword(string username, string password);
     Task<bool> CheckPassword(User user, string password);
+    Task<User?> FindByUsernameWithRoles(string username);
 }

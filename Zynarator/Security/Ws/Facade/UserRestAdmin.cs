@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
-[Route("api/admin/user/")]
+[Route("api/user/")]
 [Authorize(Roles = Roles.Admin)]
 [ApiController]
 public class UserRest : BaseController<User, UserDto, UserService, UserCriteria>
@@ -58,21 +58,29 @@ public class UserRest : BaseController<User, UserDto, UserService, UserCriteria>
     }
 
     [HttpGet("/user/{username}")]
-    public async Task<UserDto?> FindByUsername(string username)
+    public async Task<ActionResult<UserDto?>> FindByUsername(string username)
     {
         var result = await Service.FindByUsername(username);
         return ToDto(result);
     }
 
     [HttpDelete("/user/{username}")]
-    public async Task<int> DeleteByUsername(string username)
+    public async Task<ActionResult<int>> DeleteByUsername(string username)
     {
         return await Service.DeleteByUsername(username);
     }
     
     [HttpPost("/changePassword")]
-    public async Task<bool> ChangePassword(ChangePasswordRequest changePasswordRequest) {
+    public async Task<ActionResult<bool>> ChangePassword(ChangePasswordRequest changePasswordRequest) {
         return await Service.ChangePassword(changePasswordRequest.Username, changePasswordRequest.Password);
+    }
+    
+    
+    [HttpGet("/username/{username}")]
+    public async Task<ActionResult<UserDto?>> FindByUsernameWithRoles(string username)
+    {
+        var result = await Service.FindByUsernameWithRoles(username);
+        return Ok(ToDto(result));
     }
 
     public UserRest(IContainer container, IMapper mapper) : base(container, mapper)

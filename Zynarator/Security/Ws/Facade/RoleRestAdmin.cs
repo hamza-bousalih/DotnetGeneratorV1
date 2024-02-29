@@ -3,6 +3,7 @@ using DotnetGenerator.Zynarator.Controller;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Common;
 using DotnetGenerator.Zynarator.Security.Dao.Criteria;
+using DotnetGenerator.Zynarator.Security.Payload.Request;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
 using DotnetGenerator.Zynarator.Security.Ws.Dto;
 using DotnetGenerator.Zynarator.Util;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DotnetGenerator.Zynarator.Security.Ws.Facade;
 
-[Route("api/admin/role/")]
+[Route("api/role/")]
 [Authorize(Roles = Roles.Admin)]
 [ApiController]
 public class RoleRest : BaseController<Role, RoleDto, RoleService, RoleCriteria>
@@ -54,6 +55,13 @@ public class RoleRest : BaseController<Role, RoleDto, RoleService, RoleCriteria>
     public override async Task<ActionResult<PaginatedList<RoleDto?>>> FindPaginatedByCriteria(RoleCriteria criteria)
     {
         return await base.FindPaginatedByCriteria(criteria);
+    }
+
+    [HttpGet("authority/{authority}")]
+    public async Task<ActionResult<RoleDto?>> FindByAuthority(string authority)
+    {
+        var result = await Service.FindByAuthority(authority);
+        return ToDto(result);
     }
 
     public RoleRest(IContainer container, IMapper mapper) : base(container, mapper)

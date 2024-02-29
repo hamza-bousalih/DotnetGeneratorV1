@@ -1,5 +1,6 @@
 ﻿using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Dao.Criteria;
+using DotnetGenerator.Zynarator.Security.Dao.Repository;
 using DotnetGenerator.Zynarator.Security.Dao.Repository.Facade;
 using DotnetGenerator.Zynarator.Security.Dao.Specification;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
@@ -13,46 +14,56 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
 {
     private readonly UserManager<User> _userManager;
 
-    public override async Task<User> Create(User item)
+    public override async Task<User?> Create(User item, bool useTransaction = true)
     {
-        RoleUser[]? roleUsers = null;
-        if (item.RoleUsers != null)
-        {
-            roleUsers = new RoleUser[item.RoleUsers!.Count];
-            item.RoleUsers.CopyTo(roleUsers);
-            item.RoleUsers.Clear();
-        }
-
-        ModelPermissionUser[]? modelPermissionUsers = null;
-        if (item.ModelPermissionUsers != null)
-        {
-            modelPermissionUsers = new ModelPermissionUser[item.ModelPermissionUsers!.Count];
-            item.ModelPermissionUsers.CopyTo(modelPermissionUsers);
-            item.ModelPermissionUsers.Clear();
-        }
-
-        await _userManager.CreateAsync(item, item.Password);
-        if (roleUsers != null)
-        {
-            foreach (var element in roleUsers)
+        return await Repository.TransactionBeginNullable(
+            async () =>
             {
-                element.User = item;
-                await _roleUserService.Create(element);
-                item.RoleUsers!.Add(element);
-            }
-        }
+                RoleUser[]? roleUsers = null;
+                if (item.RoleUsers != null)
+                {
+                    roleUsers = new RoleUser[item.RoleUsers!.Count];
+                    item.RoleUsers.CopyTo(roleUsers);
+                    item.RoleUsers.Clear();
+                }
 
-        if (modelPermissionUsers == null) return item;
-        {
-            foreach (var element in modelPermissionUsers)
-            {
-                element.User = item;
-                await _modelPermissionUserService.Create(element);
-                item.ModelPermissionUsers!.Add(element);
-            }
-        }
+                ModelPermissionUser[]? modelPermissionUsers = null;
+                if (item.ModelPermissionUsers != null)
+                {
+                    modelPermissionUsers = new ModelPermissionUser[item.ModelPermissionUsers!.Count];
+                    item.ModelPermissionUsers.CopyTo(modelPermissionUsers);
+                    item.ModelPermissionUsers.Clear();
+                }
+                
+                var foundedUserByUsername = await FindByUsername(item.UserName);
+                var foundedUserByEmail = await FindByEmail(item.Email);
+                if (foundedUserByUsername is not null|| foundedUserByEmail is not null) return null;
+                
+                await _userManager.CreateAsync(item, item.Password);
+                if (roleUsers != null)
+                {
+                    foreach (var element in roleUsers)
+                    {
+                        element.User = item;
+                        await _roleUserService.Create(element, false);
+                        item.RoleUsers!.Add(element);
+                    }
+                }
 
-        return item;
+                if (modelPermissionUsers == null) return item;
+                {
+                    foreach (var element in modelPermissionUsers)
+                    {
+                        element.User = item;
+                        await _modelPermissionUserService.Create(element, false);
+                        item.ModelPermissionUsers!.Add(element);
+                    }
+                }
+
+                return item;
+            },
+            useTransaction
+        );
     }
 
     public new async Task<User?> FindByReferenceEntity(User t)
@@ -65,9 +76,16 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
         return await Repository.DeleteByUsername(t.UserName!);
     }
 
-    public async Task<User?> FindByUsername(string username)
+    public async Task<User?> FindByUsername(string? username)
     {
+        if (username is null) return null;
         return await Repository.FindByUsername(username);
+    }
+
+    public async Task<User?> FindByEmail(string? email)
+    {
+        if (email is null) return null;
+        return await Repository.FindByUsername(email);
     }
 
     public async Task<int> DeleteByUsername(string username)
@@ -77,11 +95,16 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
 
     public async Task<bool> ChangePassword(string username, string password)
     {
-        var user = await Repository.FindByUsername(username);
-        if (user == null) return false;
-        user.PasswordChanged = true;
-        var result = await _userManager.ChangePasswordAsync(user, user.Password, password);
-        return result.Succeeded;
+        return await Repository.TransactionBegin(
+            async () =>
+            {
+                var user = await Repository.FindByUsername(username);
+                if (user == null) return false;
+                user.PasswordChanged = true;
+                var result = await _userManager.ChangePasswordAsync(user, user.Password, password);
+                return result.Succeeded;
+            }
+        );
     }
 
     public async Task<bool> CheckPassword(User user, string password)
@@ -106,17 +129,27 @@ public class UserServiceImpl : Service<User, UserDao, UserCriteria, UserSpecific
 
     protected override async Task UpdateWithAssociatedLists(User? user)
     {
-        if (user != null && user.Id != 0) {
-            List<List<ModelPermissionUser>> resultModelPermissionUsers = _modelPermissionUserService.GetToBeSavedAndToBeDeleted(await _modelPermissionUserService.FindByUserId(user.Id), user.ModelPermissionUsers);
+        if (user != null && user.Id != 0)
+        {
+            var resultModelPermissionUsers =
+                _modelPermissionUserService.GetToBeSavedAndToBeDeleted(
+                    await _modelPermissionUserService.FindByUserId(user.Id), user.ModelPermissionUsers);
             await _modelPermissionUserService.Delete(resultModelPermissionUsers[1]);
             resultModelPermissionUsers[0].ForEach(e => e.User = user);
-            await _modelPermissionUserService.Update(resultModelPermissionUsers[0], true);
-            
-            List<List<RoleUser>> resultRoleUsers = _roleUserService.GetToBeSavedAndToBeDeleted(await _roleUserService.FindByUserId(user.Id), user.RoleUsers);
+            await _modelPermissionUserService.Update(resultModelPermissionUsers[0]);
+
+            var resultRoleUsers =
+                _roleUserService.GetToBeSavedAndToBeDeleted(await _roleUserService.FindByUserId(user.Id),
+                    user.RoleUsers);
             await _roleUserService.Delete(resultRoleUsers[1]);
             resultRoleUsers[0].ForEach(e => e.User = user);
-            await _roleUserService.Update(resultRoleUsers[0], true);
+            await _roleUserService.Update(resultRoleUsers[0]);
         }
+    }
+
+    public async Task<User?> FindByUsernameWithRoles(string username)
+    {
+        return await Repository.FindByUsername(username);
     }
 
     public UserServiceImpl(IContainer container, UserManager<User> userManager) : base(container)
