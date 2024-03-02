@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using DotnetGenerator.Zynarator.Security.Bean;
 using DotnetGenerator.Zynarator.Security.Dao.Criteria;
+using DotnetGenerator.Zynarator.Security.Dao.Repository;
 using DotnetGenerator.Zynarator.Security.Dao.Repository.Facade;
 using DotnetGenerator.Zynarator.Security.Dao.Specification;
 using DotnetGenerator.Zynarator.Security.Service.Facade;
@@ -20,6 +21,23 @@ public class ModelPermissionUserServiceImpl :
     {
         _modelPermissionService = container.GetInstance<ModelPermissionService>();
         _actionPermissionService = container.GetInstance<ActionPermissionService>();
+    }
+
+    public override async Task<ModelPermissionUser?> Create(ModelPermissionUser item, bool useTransaction = true)
+    {
+        return await Repository.TransactionBegin(
+            async () =>
+            {
+                var loaded = item.Id == 0 ? default : await FindByReferenceEntity(item);
+                if (loaded != null) return loaded;
+
+                if (item.ModelPermission != null) item.ModelPermission = await _modelPermissionService.Create(item.ModelPermission, false);
+                if (item.ActionPermission != null) item.ActionPermission = await _actionPermissionService.Create(item.ActionPermission, false);
+
+                return await Repository.Save(item);
+            },
+            useTransaction
+        );
     }
 
     public async Task<List<ModelPermissionUser>?> FindByActionPermissionId(long id)
